@@ -1,0 +1,121 @@
+; INF file for Tornado
+
+[AddIcon]
+; format:
+; group, item, exe, [args], [dir], [fmin], [iconIndex], [iconPath], [logValue], [osversion], [infVals]
+Startup,Tornado Registry,host\x86-win32\bin\wtxregd.exe,-V,host\x86-win32\bin,1,0,,noLog,,torRegStartup
+Startup,Tornado Registry,host\x86-win32\bin\wtxregd.exe,-V -use_portmapper,host\x86-win32\bin,1,0,,noLog,,torRegStartupPortmapper
+%defGroupGet%,Tornado,host\x86-win32\bin\tornado.exe,,host\x86-win32\bin
+%defGroupGet%,Tornado Registry,host\x86-win32\bin\wtxregd.exe,-V,host\x86-win32\bin
+%defGroupGet%,Tornado Registry,host\x86-win32\bin\wtxregd.exe,-V -use_portmapper,host\x86-win32\bin,1,0,,,,torRegPortmapper
+%defGroupGet%,VxWorks COM1,host\x86-win32\bin\vxworks1.ht,,host\x86-win32\bin,,,host\resource\bitmaps\Tornado\Hyper.ico
+%defGroupGet%,VxWorks COM2,host\x86-win32\bin\vxworks2.ht,,host\x86-win32\bin,,,host\resource\bitmaps\Tornado\Hyper.ico
+%defGroupGet%,FTP Server,host\x86-win32\bin\wftpd32.exe,,host\x86-win32\bin
+%defGroupGet%,Read Me,README.TXT
+%defGroupGet%,Tornado Online Manuals,host\x86-win32\bin\UITclSh.exe,%destDirGet%\host\resource\doctools\helpDlg.tcl,,,,host\resource\bitmaps\windman\help.ico
+%defGroupGet%,Event Receive,host\x86-win32\bin\uitclsh.exe,%destDirGet%\host\resource\tcl\EvtRecv.win32.tcl,host\x86-win32\bin,0,0,host\resource\bitmaps\WindView\evtRecv.ico
+
+[AddRegistry]
+; format:
+; reg-root-string, subkey, value-name, value, [logValue], [infVals]
+HKLMCU,Software\%WRS%\%Tornado% %version%,WIND_REGISTRY,localhost,noLog,torRegStartup
+HKLMCU,Software\%WRS%\%Tornado% %version%,WIND_REGISTRY,%setupVals(registry)%,noLog,torRegRemote
+HKLMCU,Software\%WRS%\%Tornado% %version%,WIND_REGISTRY,localhost,noLog,torRegNTServ
+HKLMCU,Software\%WRS%\%Tornado% %version%,WIND_REGISTRY,localhost,noLog,torRegManual
+HKLMCU,Software\%WRS%\%Tornado% %version%\Registry,REGISTRY_DIRECTORY,%destDirGet%\.wind,,noLog,torRegNTServ
+HKLMCU,Software\%WRS%\%Tornado% %version%\Registry,REGISTRY_PING_DELAY,120,int,noLog,torRegNTServ
+HKLMCU,Software\%WRS%\%Tornado% %version%\Registry,REGISTRY_MAX_UNSUCCESS_PING,5,int,noLog,torRegNTServ
+HKLMCU,Software\%WRS%\%Tornado% %version%\Registry,USE_PORTMAPPER,0,int,noLog,torRegNTServ
+HKCU,Software\%WRS%,folder,%defGroupGet%,,addFolder
+HKLMCU,Software\%WRS%,WIND_BASE,%destDirGet%,,addDestDir
+HKLMCU,Software\%WRS%,name,%userNameGet%,,addRegistration
+HKLMCU,Software\%WRS%,company,%companyNameGet%,,addRegistration
+HKLMCU,Software\%WRS%,keyData,%setupVals(keyString)%,,addRegKeyData
+HKLMCU,Software\%WRS%,WRSLicense,%wrsLicenseGet%,,addRegistration
+HKLMCU,Software\%WRS%,projectName,N/A,,addRegistration
+HKLMCU,Software\%WRS%,nLicensedUsers,N/A,,addRegistration
+HKLMCU,Software\%WRS%,registryOption,%ctrlVals(torRegAction)%,,addRegOption
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; File extentions:
+; format:
+; reg-root-string, subkey, value-name, value, [logValue], [infVals]
+
+HKCR,.wpj,,TornadoProjectType,,proj
+HKCR,.wsp,,TornadoWorkspaceType,,wksp
+HKCR,.tcl,,TornadoTCLType,,tcl
+HKCR,.c,,TornadoSourceType,,source
+HKCR,.cc,,TornadoSourceType,,source
+HKCR,.cpp,,TornadoSourceType,,source
+HKCR,.cxx,,TornadoSourceType,,source
+HKCR,.h,,TornadoSourceType,,source
+HKCR,.hpp,,TornadoSourceType,,source
+HKCR,.hxx,,TornadoSourceType,,source
+HKCR,.s,,TornadoSourceType,,source
+HKCR,.wvr,,TornadoWindViewType,,windview
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; File types:
+; format:
+; reg-root-string, subkey, value-name, value, [logValue], [infVals]
+
+HKCR,TornadoProjectType,,Tornado Project File,,proj
+HKCR,TornadoWorkspaceType,,Tornado Workspace File,,wksp
+HKCR,TornadoTCLType,,Tornado TCL File,,tcl
+HKCR,TornadoSourceType,,Tornado Source File,,source
+HKCR,TornadoWindViewType,,Tornado WindView File,,windview
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; File type associated commands and default icons:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; indices for default icons came from 
+;    wpwr\host\src\tornado\Tornado\resource.h
+; and may need to be updated in the future if resource.h changes.
+; negative value means absolute icon id versus relative position in
+; .exe resources sequence.
+;
+; format:
+; reg-root-string, subkey, value-name, value, [logValue], [infVals]
+
+HKCR,TornadoProjectType\shell\open\command,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe "%1",,proj
+HKCR,TornadoProjectType\shell\open\ddeexec,,[open("%1")],,proj
+HKCR,TornadoProjectType\DefaultIcon,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe%Comma%-156,,proj
+
+HKCR,TornadoWorkspaceType\shell\open\command,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe "%1",,wksp
+HKCR,TornadoWorkspaceType\shell\open\ddeexec,,[open("%1")],,wksp
+HKCR,TornadoWorkspaceType\DefaultIcon,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe%Comma%-157,,wksp
+
+HKCR,TornadoTCLType\shell\open\command,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe "%1",,tcl
+HKCR,TornadoTCLType\shell\open\ddeexec,,[open("%1")],,tcl
+HKCR,TornadoTCLType\DefaultIcon,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe%Comma%-153,,tcl
+
+HKCR,TornadoSourceType\shell\open\command,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe "%1",,source
+HKCR,TornadoSourceType\shell\open\ddeexec,,[open("%1")],,source
+HKCR,TornadoSourceType\DefaultIcon,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe%Comma%-137,,source
+
+HKCR,TornadoWindViewType\shell\open\command,,%destDirGet%\host\%windHostTypeGet%\bin\Tornado.exe "%1",,windview
+HKCR,TornadoWindViewType\shell\open\ddeexec,,[open("%1")],,windview
+HKCR,TornadoWindViewType\DefaultIcon,,%destDirGet%\host\resource\bitmaps\WindView\WindView.ico,,windview
+
+[AddService]
+; format:
+; service name, exe, path, [dependency], [infVals]
+Tornado Registry,wtxregds.exe,host\x86-win32\bin,,torRegNTServ
+
+[FilesCopy]
+; format:
+; source path, destination path, [option], [osversion], [infVals]
+%cdromRootDirGet%\X86\WINNT\REGSVR32.EXE,%sysDirGet%\REGSVR32.EXE,checkVersion,NT4x
+
+[CheckPatch]
+; format:
+; patch number, description, WIND_HOST_TYPE, conditions, [required]
+
+[Strings]
+; format:
+; string=value
+version=2.2
+WRS=Wind River Systems
+Tornado=Tornado
+Comma=,
+

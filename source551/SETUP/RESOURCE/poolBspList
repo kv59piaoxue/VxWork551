@@ -1,0 +1,5 @@
+#!/bin/csh
+
+set pool = $1
+
+/folk/qms/tools/pool show product $pool | grep tornado-bsp | grep -v portkit | nawk '{split($3, tmp, ","); print tmp[3];}' | sort

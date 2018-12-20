@@ -1,0 +1,18 @@
+29-Nov-07.16:10	CD manufacturing time: Wed Oct 08 15:46:05 PDT 2003
+29-Nov-07.16:10	TDK-15068-ZC-01	SETUP-2.2	C:\TornadoPPC\source551
+29-Nov-07.16:10	VxWorks 5.5.1 Core O/S Source Products
+29-Nov-07.16:10	Microsoft Windows NT version 5.1 (Build 2600) Service Pack 2
+29-Nov-07.16:10	100-25076-30	VxWorks Kernel Source Code: arm
+29-Nov-07.16:10	100-25077-30	VxWorks Kernel Source Code: coldfire
+29-Nov-07.16:10	100-25080-30	VxWorks Kernel Source Code: i86
+29-Nov-07.16:10	100-25078-30	VxWorks Kernel Source Code: intel-arm
+29-Nov-07.16:10	100-25079-30	VxWorks Kernel Source Code: mips
+29-Nov-07.16:10	100-25081-30	VxWorks Kernel Source Code: ppc
+29-Nov-07.16:10	100-25082-30	VxWorks Kernel Source Code: sh
+29-Nov-07.16:10	100-25074-30	VxWorks Network Source Code
+29-Nov-07.16:10	100-25073-30	VxWorks Source Code
+29-Nov-07.16:11	100-25083-30	VxWorks TrueFFS Source Code
+29-Nov-07.16:11	ComTcl.dll registration failed: child process exited abnormally
+29-Nov-07.16:11	Tornado.exe registration failed: couldn't execute "C:\TornadoPPC\source551\host\x86-win32\bin\Tornado.exe": no such file or directory
+29-Nov-07.16:11	WrsDebugger.dll registration failed: child process exited abnormally
+

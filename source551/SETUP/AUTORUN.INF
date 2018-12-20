@@ -1,0 +1,5 @@
+[autorun]
+open = X86\WIN32\UITCLSH.EXE RESOURCE\TCL\AUTORUN.TCL
+icon = RESOURCE/BITMAPS\TORNADO.ICO
+shell\setup = &Setup
+shell\setup\command = SETUP.EXE

@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# UNINST - shell script wrapper to run Uninstall.
+#
+# Copyright 1994-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 02b,15dec98,tcy  checked existence and modified path to SETUP 
+#                  so UNINST can be invoked from bin directory
+# 02a,12nov98,bjl  modified to be wrapper to call SETUP UNINST. 
+# 01e,27oct98,tcy  removed echo message upon startup
+# 01d,21oct98,bjl  removed sunos4 and parisc-hpux9 from supported 
+#                  platforms, added disk space checking for hpux,
+#                  move checking for display after determining 
+#                  WIND_HOST_TYPE.
+# 01c,05oct98,bjl  changed tar command to unzip. 
+# 01b,30sep98,tcy  more fixes for UNINST
+# 01a,27sep98,tcy  new T2 version
+#
+# SYNOPSIS
+# .tS
+# UNINST <WIND_BASE>
+# .tE
+#
+# DESCRIPTION
+# For backward compatibilty, this shell script acts as a wrapper 
+# to call SETUP with Uninstall arguments.  
+#
+# OPTIONS
+# .IP "<WIND_BASE>"
+# The root of the Tornado tree that is to be uninstalled.
+#
+#*/
+
+WIND_BASE=$1
+
+usage="Usage: $0 <Installed Directory>"
+
+if [ $# -ne 1 ] 
+then
+    echo "$usage"
+    exit 0
+fi
+
+if [ ! -f $WIND_BASE/SETUP/SETUP ]
+then 
+    echo "Error: $WIND_BASE/SETUP/SETUP not found."
+    exit 0
+fi
+
+exec $WIND_BASE/SETUP/SETUP UNINST $1

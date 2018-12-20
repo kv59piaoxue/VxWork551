@@ -1,0 +1,22 @@
+#!/bin/csh -f
+#
+# mkBspArch   Auto generates the BSP_ARCH.TXT file
+# 
+# makes mkBspArch.tcl callable from the command line
+#
+# Modification History
+# --------------------
+# 01c,21jun02,sfp  correct filename
+# 01b,21may02,sfp  update to run standalone
+# 01a,31Jan02,sfp  written
+
+/usr/atria/bin/cleartool startview wrs.dig
+
+set hostType=`/usr/common/wind_host_type`
+set tclCmd=/view/wrs.dig/.wind_digtools/river/digtools/tools/$hostType/bin/tclsh
+
+setenv TCL_LIBRARY /view/wrs.dig/.wind_digtools/river/digtools/tools/src/tcl/lib/tcl
+rehash
+
+eval exec $tclCmd ./mkBspArch.tcl 
+

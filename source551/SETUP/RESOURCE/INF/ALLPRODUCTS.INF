@@ -1,0 +1,10 @@
+; INF file that will be executed for all products.
+
+[FilesCopy]
+; format:
+; source path, destination path, [option], [osversion], [infVals]
+%cdromRootDirGet%\README.TXT,%destDirGet%\README.TXT,update
+%cdromRootDirGet%\PROBLEMS.TXT,%destDirGet%\PROBLEMS.TXT,update
+%cdromRootDirGet%\FIXED.TXT,%destDirGet%\FIXED.TXT,update
+%cdromRootDirGet%\NEW.TXT,%destDirGet%\NEW.TXT,update
+%cdromRootDirGet%\LICENSE.TXT,%destDirGet%\LICENSE.TXT,update

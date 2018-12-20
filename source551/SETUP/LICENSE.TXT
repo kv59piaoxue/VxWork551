@@ -1,0 +1,1 @@
+The software on this CD is the property of Wind River Systems, Inc. and its licensors. You have previously received and signed a source code license for the software products included on this CD. If you wish to see a copy of your source code license, please contact Wind River Systems, Inc. at 1-800-545-9463 or your local Wind River sales representative.

@@ -1,0 +1,9 @@
+; INF file for WindView
+
+[ArFlags]
+-cr
+
+[AddIcon]
+; format:
+; group, item, exe, [args], [dir], [fmin], [iconIndex], [iconPath], [logValue], [osversion], [infVals]
+%defGroupGet%,Event Receive,host\x86-win32\bin\uitclsh.exe,%destDirGet%\host\resource\tcl\EvtRecv.win32.tcl,host\resource\tcl,0,0,host\resource\bitmaps\WindView\evtRecv.ico

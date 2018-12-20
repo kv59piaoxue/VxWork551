@@ -1,0 +1,729 @@
+#!/bin/sh
+#
+# SETUP - the Tornado Setup and Uninstall script
+#
+# Copyright 1994-2003 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 03o,04apr03,bjl  added exit for spr 87398, added parsing of lm error 
+#                  flags (spr 87400). 
+# 03n,17jul02,wmd  Modified to add [/-]PATCH=<path> parameter (Ed Marks 
+#                  changes).
+# 03m,03jan02,bwd  Modified Copyright to 2002
+# 03l,29oct01,bwd  Allow running SETUP will different arguments
+# 03k,27jul01,j_w  merged fix for spr31766
+# 03j,12jun01,j_w  Update Setup version to 2.2
+# 03i,23apr99,bjl added checking for KDE, do not export MWWM for fvwm.
+# 03h,01apr99,wmd  Add checking for fvwm and set the env var MWWM to fvwm.
+# 03g,25mar99,bjl updated tmp space requirements.
+# 03f,24mar99,bjl rename UITclSh.
+# 03e,21mar99,bjl removed font cache message.  
+# 03d,19mar99,wmd  Remove the $HOME/windows directory if found, it shouldn't
+#                  be required.
+# 03c,17mar99,wmd  Need to change copyright to 1999.
+# 03b,09mar99,wmd fix so that font caching works, add lines to remove TMP dir.
+# 03a,03mar99,wmd update library paths for mainwin 3.1.
+# 02z,18feb99,tcy prevent HP10.10 users from running SETUP
+# 02y,29jan99,bjl added comments and edited for coding conventions. 
+# 02x,11jan99,bjl terminate color manager when Setup exits (fixes
+#                 spr 24219, 24273).
+# 02w,09dec98,bjl added check for necessary HPUX patch.
+# 02v,19nov98,bjl restored to run INSTW32.TCL with $CD_ROOT to quicken
+#                 Setup appearance.
+# 02u,17nov98,bjl changed tmp directory to $HOME instead of $HOME/tmp
+#                 (fixes spr 23328, 23327), check that TMPDIR and TMP
+#                 are not set to /tmp.
+# 02t,16nov98,bjl added rmtmpdir procedure to display msg if tmp dir removal
+#                 is unsucessful, changed rm to /bin/rm, send rm output 
+#                 to /dev/null. 
+# 02s,12nov98,tcy copy setuptcl library from the CD SETUP directory
+# 02r,12nov98,bjl unset MWHOME, export SETUP_UNINST for uninstall.
+# 02q,12nov98,bjl merged in UNINST script.
+# 02p,11nov98,bjl added swap space checking for MainWin, use TMP or home 
+#                 directory for temporary files before using /tmp.  
+# 02o,27oct98,bjl changed INSTW32.TCL to AUTORUN.TCL.
+# 02n,23oct98,bjl added copyright message, modified display message.  
+# 02m,21oct98,bjl tee font cache creation to prevent logout on hpux.
+# 02l,20oct98,bjl do not exec MWWRAPPER so TMP is removed on exit for hpux. 
+# 02k,19oct98,bjl remove background.
+# 02j,15oct98,bjl added disk space checking for parisc-hpux10, removed
+#                 sunos4 and parisc-hpux9 from supported platforms.
+# 02i,09oct98,bjl removed preparation of files message.
+# 02h,05oct98,bjl changed tar command to unzip.  
+# 02g,20sep98,bjl use /bin/tar, changed tmp file messages, modified handling of
+#                 font cache.  
+# 02f,14sep98,bjl added checking of disk space for Solaris.
+# 02e,09sep98,bjl unset MWFONT_CACHE_DIR to ensure use of Tornado font cache.
+# 02d,08sep98,bjl removed -L and -T options, added font cache and temp file
+#                 messages.
+# 02c,04sep98,bjl added WIND_BASE.
+# 02b,03sep98,bjl changed tmp to reside under home directory.
+# 02a,18aug98,wmd modify for mainwin operation.
+# 01k,07oct97,pn  fixed the host's version ckecking on SunOs.
+# 01j,13jun96,pn  started using standard TCL/TK shell, cleanup.
+# 01i,04mar96,pn  allowed patch CD to contain no TCL interpreter.
+# 01h,24feb96,pn  fixed the broken pipe problem on hpux machine.
+# 01g,18dec96,pn  change location of "TCL" to "RESOURCE/TCL" on CD
+# 01f,05nov96,pn  added support for AIX host.
+# 01e,21oct96,pn  added -L for installing license manager.
+# 01d,30aug96,pn  invoked correct tcl file base on install mode.
+# 01c,29aug96,pn  changed to use tcl7.5 and tk4.1.
+# 01b,09aug96,pn  Use uppercase for file and directory name.
+# 01a,12jul96,jc  Written. 
+#
+# SYNOPSIS
+# .tS
+# SETUP [UNINST <WIND_BASE>]
+# .tE
+#
+# DESCRIPTION
+# This shell script executes Tornado Setup or Uninstall for Unix hosts.    
+#
+# OPTIONS
+# .IP "UNINST <WIND_BASE>"
+# Run the Uninstall program.  <WIND_BASE> must be set to the root
+# of the Tornado tree that is to be uninstalled.    
+#
+#*/
+
+#############################################################################
+#
+# Perform necessary initialization.
+#
+
+# Read arguments and initialize necessary variables.
+
+INST_TYPE="Software"
+INST_MODE=gui
+if [ "$2" != "" ]
+then
+    WIND_BASE=$2
+fi
+
+UNINSTARG=$1
+UI=UITcl
+ARGV=""
+if [ -d $HOME/windows ]
+then
+    windowsDirExisted=1
+else
+    windowsDirExisted=0
+fi
+
+# Determine whether to run Setup or Uninstall. 
+
+if [ "$UNINSTARG" = "UNINST" ]
+then
+    uninstall=1
+    setup_type="UNINST"
+    SETUP_UNINST=1
+
+elif [ "$UNINSTARG" = "/L" -o "$UNINSTARG" = "-L" ]
+then
+    uninstall=0
+    ARGV=$*
+    setup_type="SETUP"
+elif [ "$UNINSTARG" = "/F" -o "$UNINSTARG" = "-F" ]
+then
+    uninstall=0
+    ARGV=$*
+    setup_type="SETUP"
+elif [ "$UNINSTARG" = "/E" -o "$UNINSTARG" = "-e" -o\
+       "$UNINSTARG" = "/U" -o "$UNINSTARG" = "-u" -o\
+       "$UNINSTARG" = "/M" -o "$UNINSTARG" = "-m" -o\
+       "$UNINSTARG" = "/C" -o "$UNINSTARG" = "-c" ]
+then
+    uninstall=0
+    ARGV=$*
+    setup_type="SETUP"
+    if [ $2 = "WindRiver_GCC" ]
+    then
+        exit 0
+    fi
+elif [ "$UNINSTARG" = "/OVERRIDE" -o "$UNINSTARG" = "-OVERRIDE" ]
+then
+    uninstall=0
+    ARGV=$*
+    setup_type="SETUP"
+elif [ "`echo $UNINSTARG | cut -c 2-6`" = "PATCH" ]
+then
+    uninstall=0
+    ARGV=$*
+    setup_type="SETUP"
+else
+    uninstall=0
+    setup_type="SETUP"
+fi
+
+# Display the Copyright message for a Setup installation.
+
+if [ $uninstall = 0 ]
+then
+    echo "Tornado 2.2 Setup"
+    echo "Copyright (C) 2002, Wind River Systems, Inc."
+    echo "All Rights Reserved"
+    echo ""
+fi
+
+# Set the usage message.
+
+if [ $uninstall = 1 ]
+then
+    usage="\nUsage: UNINST <Installed Directory>"
+else
+    usage="\nUsage: $0"
+fi
+
+# Make sure the number of arguments is correct.
+
+if [ $uninstall = 1 ]
+then
+    numargs=2
+else
+    numargs=5
+fi
+
+if [ $# -gt $numargs ] 
+then
+    echo "$usage"
+    exit 0
+fi
+
+# Check for a valid DISPLAY setting.
+
+if [ "$DISPLAY" = "" -a "$INST_MODE" = "gui" ]; then
+    echo ""
+    echo "Warning: The DISPLAY environment variable is not set."
+    echo "         Please set the variable and rerun $setup_type."
+    echo ""
+    exit
+fi
+
+# Checks for a valid WIND_BASE setting.
+
+if [ $uninstall = 1 ]
+then
+    if [ "$WIND_BASE" = "" -o ! -d "$WIND_BASE" ]
+    then
+        echo "$usage"
+        exit 0
+    else
+        ROOT=`pwd`
+        cd $WIND_BASE
+        WIND_BASE=`pwd`
+        cd $ROOT
+        UNINST_HOME=$WIND_BASE/.wind/uninst
+    fi
+fi
+
+# Obtain the CD Setup root directory.
+
+if [ $uninstall = 1 ]
+then
+    CD_ROOT=$WIND_BASE/SETUP
+    if [ -d $CD_ROOT ] 
+    then
+        cd $CD_ROOT
+    else
+        echo "UNINST: $CD_ROOT does not exist.  Please make sure that"
+        echo "$WIND_BASE is the root of your Tornado tree."
+        exit 1
+    fi
+    CD_ROOT=`pwd`
+else
+    CD_ROOT=`dirname $0`
+    cd $CD_ROOT
+    CD_ROOT=`pwd`
+fi
+
+# Determine the host type.
+
+case `/bin/uname -srvm` in
+    SunOS\ 5.*\ sun4*)
+        CD_BIN=$CD_ROOT/SUN4/SOLARIS2
+        WIND_HOST_TYPE=sun4-solaris2
+        ;;
+
+    *)
+        echo 1>&2 "### You are logging in to a platform whose type"
+        echo 1>&2 "### is not supported by Tornado."
+        echo 1>&2 "### Aborting $setup_type."
+        exit 0
+        ;;
+esac
+
+
+# Determine whether the MainWin color manager is already running.
+
+currentuser=`whoami`
+colormanager_process=`/bin/ps -u $currentuser | /bin/grep -i mwcolor | \
+                      /bin/awk '{print $1}'`
+if [ "$colormanager_process" != "" ]
+then
+    colormgr_already_running=1    
+else
+    colormgr_already_running=0    
+fi
+
+# Determine if the KDE window manager is being used.
+
+windowManager=`/bin/ps -u $currentuser | /bin/grep -i kwm | \
+               /bin/awk '{print $1}'`
+if [ "$windowManager" != "" ]
+then
+    SETUP_USEKDE=1
+    export SETUP_USEKDE
+fi
+
+# Determine if the fvwm window manager is being used.
+
+windowManager=`/bin/ps -u $currentuser | /bin/grep -i fvwm | \
+               /bin/awk '{print $1}'`
+if [ "$windowManager" != "" ]
+then
+    SETUP_USEFVWM=1
+    export SETUP_USEFVWM
+fi
+
+#############################################################################
+#
+# The following commands create a temporary directory needed by Setup and 
+# Uninstall.  The temporary directory is removed after SETUP exits.
+#
+
+# Unset $TMPDIR or $TMP if either is set to /tmp to avoid filling
+# up swap space needed by Mainwin.
+
+if [ "$TMPDIR" = "/tmp" ] 
+then
+    unset TMPDIR
+fi
+
+if [ "$TMP" = "/tmp" ] 
+then
+    unset TMP
+fi
+
+# Set the TMP variable to a unique directory name based on the process id.
+# By default, if TMPDIR or TMP have not been set in the environment,
+# TMP is set to reside under the user's home directory.  
+
+if [ "$TMPDIR" != "" ]
+then
+    TMPDISPLAY=$TMPDIR
+    TMP=$TMPDIR/Inst$$
+elif [ "$TMP" != "" ]
+then
+    TMPDISPLAY=$TMP
+    TMP=$TMP/Inst$$
+else
+    TMPDISPLAY=$HOME
+    TMP=$HOME/tmp_WRS-Inst$$
+fi
+
+# Create the TMP directory.  Exit and display an error message if there
+# is a problem when creating the TMP directory.
+
+/bin/mkdir -p $TMP || /bin/mkdir $TMP || exit 0
+
+# Set a default WIND_BASE if it has not yet been set.  
+
+if [ "$WIND_BASE" = "" ]
+then
+    WIND_BASE=/usr/wind
+fi
+
+
+#############################################################################
+#
+# The following commands check to make sure enough swap space is available
+# for MainWin.  
+#
+
+exit_setup=0
+
+# At least 5 megs of swap space is necessary for MainWin. 
+
+necessary_swap_space=5
+
+# Check the amount of swap space available.
+
+if [ "$WIND_HOST_TYPE" = "sun4-solaris2" ]
+then
+    swapfree=`/usr/sbin/swap -s | /bin/awk '{print $11}' | /bin/awk -Fk \
+             '{print $1}`    
+    swapfree=`/bin/expr $swapfree / 1024`
+fi
+
+# Print an error message if not enough swap space is available.
+
+if [ $swapfree -lt $necessary_swap_space ]
+then
+    echo 
+    echo "$setup_type has detected that not enough swap space is available"
+    echo "to proceed.  Please make at least $necessary_swap_space megabytes of"
+    echo "swap space available and rerun $setup_type."
+    exit_setup=1
+fi
+
+#############################################################################
+#
+# The following commands and functions check for necessary disk space 
+# for temporary Setup files.  
+#
+
+space_available=0
+checked_home_directory=0
+
+# The amount of space needed for 
+# sun4-solaris2: 27 megs
+
+if [ "$WIND_HOST_TYPE" = "sun4-solaris2" ]
+then
+    necessary_space=27
+fi 
+
+#############################################################################
+#
+# tmpfreespace - This function sets the variable tmpfreemeg to the amount 
+#                of space available in $TMP.
+#
+
+tmpfreespace () {
+    if [ "$WIND_HOST_TYPE" = "sun4-solaris2" ] 
+    then
+        tmpfree=`/bin/df -k $TMP | /bin/grep \% | /bin/awk '{print $4}'`
+    fi
+    tmpfreemeg=`/bin/expr $tmpfree / 1024`
+}
+
+# Check the TMP directory for available space.  By default this was set to
+# the user's home directory if TMP was not initially set in the environment.
+
+tmpfreespace
+
+if [ $tmpfreemeg -lt $necessary_space ] 
+then
+    # If not enough space is available in TMP, remove the previous TMP 
+    # directory attempt.
+    
+    /bin/rm -rf $TMP 2>/dev/null
+    
+    # set TMP to reside under the user's home directory if TMP is
+    # not currently set there.  Otherwise set TMP to reside
+    # under /tmp.  
+   
+    if [ "$TMP" != "$HOME/tmp_WRS-Inst$$" ]
+    then
+        TMP=$HOME/tmp_WRS-Inst$$
+    else
+        TMP=/tmp/Inst$$
+        checked_home_directory=1
+    fi
+    
+    # create the new temporary directory for the next attempt.
+    
+    mkdir -p $TMP || mkdir $TMP || exit 0
+else
+    space_available=1
+fi
+
+# Check the user's home directory for available space if it has not
+# already been checked.  
+
+if [ $space_available -ne 1 -a $checked_home_directory -ne 1 ] 
+then
+    tmpfreespace
+    if [ $tmpfreemeg -lt $necessary_space ]
+    then
+        # remove the previous TMP directory attempt.
+        
+        /bin/rm -rf $TMP 2>/dev/null
+        TMP=/tmp/Inst$$
+    
+        # create the new temporary directory for the next attempt.
+        
+        mkdir -p $TMP || mkdir $TMP || exit 0
+    else
+        space_available=1
+    fi
+fi
+
+# Finally check /tmp for space.  It is preferable to use TMP or the
+# user's home directory for tmp space first, to prevent filling
+# up swap space needed by MainWin or other running applications.
+
+if [ $space_available -ne 1 ]
+then
+    # Add 5 megs to necessary_space to allow for MainWin swap space.
+    
+    tmp_necessary_space=`/bin/expr $necessary_space + 5`  
+
+    tmpfreespace
+    if [ $tmpfreemeg -lt $tmp_necessary_space ]
+    then
+        /bin/rm -rf $TMP 2>/dev/null
+    else 
+        space_available=1
+    fi
+fi
+
+# Print an error message if not enough space is available in the
+# temporary directory.
+
+if [ $space_available -ne 1 ]
+then
+    echo
+    echo "$setup_type has detected that there is not enough space available" 
+    echo "in your TMP directory or your home directory to copy temporary"
+    echo "files.  Please set the environment variable TMP to a directory"
+    echo "location with $necessary_space megabytes free, or free enough space"
+    echo "in your home directory."
+    echo
+    exit_setup=1
+fi
+
+#############################################################################
+#
+# rmtmpdir - This function removes the $TMP directory.  It prints a message 
+#            to the display if removing $TMP is unsuccessful.  
+#
+
+rmtmpdir () {
+    if /bin/rm -rf $TMP 2>/dev/null
+    then  
+        :  # Tmp directory was sucessfully removed
+    else
+        echo
+        echo "Warning: $setup_type has detected that it was not allowed to" 
+        echo "remove all temporary files located in $TMP."
+        echo "These files are no longer needed by $setup_type and may be" 
+        echo "removed."
+        echo
+    fi
+}
+
+#############################################################################
+#
+# killcolormanager - This function kills the MainWin Color Manager 
+#                    running in the background.
+#
+
+killcolormanager () {
+    currentuser=`whoami`
+    colormanager_process=`/bin/ps -u $currentuser | /bin/grep -i mwcolor | \
+                          /bin/awk '{print $1}'`
+    if [ "$colormanager_process" != "" ]
+    then
+        if /bin/kill -9 $colormanager_process 2>/dev/null
+        then
+            : # kill was successful
+        else
+            echo
+            echo "Setup has detected that it was not allowed to terminate"
+            echo "the MainWin Color Manager.  This may interfere with ejection"
+            echo "of the CD-ROM.  Please kill the process named"
+            echo "'mwcolormanager' if the CD-ROM does not eject."
+            echo 
+        fi
+    fi
+}
+
+###############################################################################
+#
+# exitsetup - This function is called when Setup exits, whether normally
+#             or through a trap.  It calls the rmtmpdir and killcolormanager 
+#             functions to clean up when SETUP exits.  See the 'trap' commands
+#             below.  
+#
+
+exitsetup () {
+    # Kill the color manager only if Setup invoked the color manager.
+
+    if [ $colormgr_already_running -ne 1 ]
+    then
+        killcolormanager
+    fi
+    rmtmpdir
+}
+
+if [ $exit_setup -eq 1 ] 
+then
+    exitsetup
+    exit 1
+fi
+
+
+#############################################################################
+# 
+# The following command unzips the Mainwin and tcl libraries needed for
+# Setup.
+#
+
+(cd $TMP; $CD_BIN/UNZIP -q $CD_BIN/MWUITCL.ZIP)
+
+#############################################################################
+# 
+# The following commands determine the Tcl interpreter location and 
+# the Tcl file to be executed.  
+#
+
+# Determine which Tcl interpreter to be used for starting SETUP.  Print
+# a message and exit if the interpreter cannot be found.
+
+/bin/mv $TMP/UITclSh $TMP/SETUP
+/bin/mv $TMP/UITclSh.rxb $TMP/SETUP.rxb
+/bin/mv $TMP/UITclSh.rxt $TMP/SETUP.rxt
+
+TRY1_GUI=$TMP/SETUP
+TRY2_GUI=$CD_BIN/host/$WIND_HOST_TYPE/bin/UITclSh
+TRY3_GUI=$WIND_BASE/host/$WIND_HOST_TYPE/bin/UITclSh
+
+if [ -f "$TRY1_GUI" ]
+then
+    INSTALL=$TRY1_GUI
+elif [ -f "$TRY2_GUI" ]
+then
+    INSTALL=$TRY2_GUI
+elif [ -f "$TRY3_GUI" ]
+then
+    INSTALL=$TRY3_GUI
+else
+    echo "${TRY1_GUI}: not found"
+    echo "${TRY2_GUI}: not found"
+    echo "${TRY3_GUI}: not found"
+    echo "WIND_BASE=$WIND_BASE"
+    exit 1
+fi
+
+# Set the correct Tcl file for Setup or Uninstall.
+
+if [ $uninstall = 1 ] 
+then
+    TCL_FILE=$UNINST_HOME/UNINST.TCL
+else
+    TCL_FILE=$CD_ROOT/RESOURCE/TCL/INSTW32.TCL
+fi
+
+# Set the Tcl file used for creating a font cache.
+
+EMPTY_TCL_FILE=$CD_ROOT/RESOURCE/TCL/EMPTY.TCL
+
+#############################################################################
+#
+# The following commands set up a trap to call the exitsetup function 
+# when SETUP exits, even when SETUP is terminated abnormally (for example,
+# the user stops SETUP with CTRL-C).  The exitsetup function will cause
+# Setup to clean up after itself.
+#
+
+trap exitsetup 0 1 15
+trap "" 2
+
+#############################################################################
+#
+# The following commands set up the environment variables needed for 
+# executing SETUP.  
+#
+
+PATH=${CD_BIN}:${TMP}:$WIND_BASE/host/$WIND_HOST_TYPE/bin:$PATH
+TCL_LIBRARY=$TMP/lib/tcl
+TK_LIBRARY=$TMP/lib/tk
+LD_LIBRARY_PATH=$TMP:$TMP/mw/lib-sunos5_optimized:$LD_LIBRARY_PATH
+SHLIB_PATH=$TMP:$TMP/mw/lib-ux10_optimized:$SHLIB_PATH
+
+# Establish XFILESEARCHPATH.
+
+XFSP=$TMP:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # Save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFSP}${XFILESEARCHPATH}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+# Make sure the Tornado font cache is used. 
+
+unset MWFONT_CACHE_DIR
+
+# Make sure the correct MWHOME setting is used for Setup.
+
+unset MWHOME
+
+# This setting removes the Setup background.  
+
+SETUP_REMOVEBACKGROUND=1
+
+# Export the necessary variables to the environment.
+
+export SETUP_REMOVEBACKGROUND
+export XFILESEARCHPATH
+export TCL_LIBRARY
+export TK_LIBRARY
+export LD_LIBRARY_PATH
+export SHLIB_PATH
+export WIND_BASE
+export WIND_HOST_TYPE
+export PATH
+export CD_ROOT
+export CD_BIN
+export TMP
+export MWFONT_CACHE_DIR
+export MWHOME
+if [ $uninstall = 1 ]
+then
+    export UI
+    export SETUP_UNINST
+fi
+
+# Copy shared libraries to the temp directory for Uninstall.
+
+if [ $uninstall = 1 ]
+then
+    if [ "$WIND_HOST_TYPE" = "sun4-solaris2" ]
+    then
+        cp $CD_BIN/SETUPTCL.SO $TMP/setuptcl.so
+    fi
+fi
+
+#############################################################################
+#
+# The following command is executed to create a font cache if necessary.  
+# The font cache creation process is displayed to the user's shell.  
+#
+
+$CD_ROOT/MWWRAPPER $INSTALL $EMPTY_TCL_FILE FONT_CACHE_CHECK
+
+#############################################################################
+#
+# The following commands execute Setup or Uninstall through MWWRAPPER.
+#
+
+if [ $uninstall = 1 ]
+then
+    $CD_ROOT/MWWRAPPER $INSTALL $TCL_FILE $WIND_BASE
+else
+    $CD_ROOT/MWWRAPPER $INSTALL $TCL_FILE $CD_ROOT $ARGV
+fi
+
+#############################################################################
+#
+# Just in case, if the temporary directory exists, remove it
+# 
+
+if [ -d $TMP ]
+then
+    rmtmpdir
+fi
+
+
+if [ -d $HOME/windows -a $windowsDirExisted = 0 ]
+then
+    rm -fr $HOME/windows
+fi

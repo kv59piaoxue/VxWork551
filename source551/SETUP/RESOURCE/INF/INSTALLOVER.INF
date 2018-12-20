@@ -1,0 +1,73 @@
+# Tornado 2.2 Installation Validation Rules
+#
+# modification history
+# --------------------
+# 01e,04apr03,bjl  added entries for T2.2.1 (spr 87399).
+# 01d,09aug02,sfp  add entry for source CD
+# 01c,30may02,bwd  Updated TDK numbers for Beta
+# 01b,07jan02,bwd  Modified to include ALL T2.2 CDs
+# 01a,03jan02,bwd  written for T2.2
+#
+# This file contains Tornado 2.2 Installation Validation Rules, where SETUP
+# uses to check install-over-a-tree policy if user chooses an existing Tornado 
+# tree as the destination directory. 
+#
+# Format and example:
+#   <CD-TDK>	<COMPATIBLE-TDK>[:<COMPATIBLE-TDK2>:...]
+#
+# where
+#  CD-TDK -- The TDK number or patch ID that the user is running an installation
+#            Wild card (*) can be used here.
+#  COMPATIBLE-TDK -- TDK(s) that the CD-TDK can install over, each seperated by ":" 
+#                    Wild card (*) can be used here. If CD-TDK cannot install over
+#                    any existing tree (fresh installation only), entry is "none".
+#                    Ex: *, TDK*, TDK-13*, TDK-13456*, TDK-13456-ZC-01, none
+#
+# For example:
+#   TDK-14380-ZC-00 (Driver/BSP for VxWorks PPC CD) can install over a tree which
+#   contains any version of TDK-14357 (Tornado 2.2 for PPC CD) in previous installation:
+#   and...
+#   TDK-14381 (Driver/BSP for VxWorks Pentium CD - any version) can install over a tree which
+#   contains any version of TDK-14358 (Tornado 2.2 for Pentium CD) in previous installation:
+#
+#   <CD-TDK>	      <COMPATIBLE-TDK>[:<COMPATIBLE-TDK2>:...]
+#   TDK-14380-ZC-00    TDK-14357*
+#   TDK-14381*         TDK-14358*
+#
+
+#<CD-TDK>	<COMPATIBLE-TDK>[:<COMPATIBLE-TDK2>:...]
+TDK-14685*      TDK-14623*
+TDK-14684*      TDK-14623*
+TDK-14628*      TDK-14620*:TDK-14621*:TDK-14622*:TDK-14623*:TDK-14624*:TDK-14625*:TDK-14626*:TDK-14627*
+TDK-14620*      TDK-14630*
+TDK-14621*      TDK-14631*
+TDK-14622*      TDK-14632*
+TDK-14623*      TDK-14633*
+TDK-14624*      TDK-14634*
+TDK-14625*      TDK-14635*
+TDK-14626*      TDK-14636*
+TDK-14627*      TDK-14637*
+TDK-14630*      TDK-14620*:TDK-15060*
+TDK-14631*      TDK-14621*:TDK-15061*
+TDK-14632*      TDK-14622*:TDK-15062*
+TDK-14633*      TDK-14623*:TDK-15063*
+TDK-14634*      TDK-14624*:TDK-15064*
+TDK-14635*      TDK-14625*:TDK-15065*
+TDK-14636*      TDK-14626*:TDK-15066*    
+TDK-14637*      TDK-14627*:TDK-15067*    
+TDK-14357*      TDK-14380*
+TDK-14358*      TDK-14381*
+TDK-14359*      TDK-14382*
+TDK-14360*      TDK-14383*
+TDK-14361*      TDK-14384*
+TDK-14362*      TDK-14385*
+TDK-14363*      TDK-14386*   
+TDK-14364*      TDK-14387*
+TDK-14380*      TDK-14357*
+TDK-14381*      TDK-14358*
+TDK-14382*      TDK-14359*
+TDK-14383*      TDK-14360*
+TDK-14384*      TDK-14361*
+TDK-14385*      TDK-14362*
+TDK-14386*      TDK-14363*
+TDK-14387*      TDK-14364*

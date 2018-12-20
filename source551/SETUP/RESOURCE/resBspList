@@ -1,0 +1,5 @@
+#!/bin/csh
+
+set bsp = $1
+
+cat /wind/river/.resources/bsp-$bsp | grep "target/config" | nawk '{split($0, tmp, "\/"); print tmp[3]; }' | sort -u

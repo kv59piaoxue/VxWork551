@@ -1,0 +1,1018 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+
+<title>
+      Installation and License Management    
+</title>
+</head>
+
+<body bgcolor="FFFFFF">
+
+
+
+<font face="Helvetica, sans-serif" class="sans">
+<h1 align="right"><i>Installation and License Management</i></h1>
+</font>
+<h4 class="Subtitle" align="right"><font face="Helvetica, sans-serif" size="-1" class="sans"><i></i></font></h4>
+
+<br class="H2"><a name="96759"></a>
+<br class="H2navbar">
+<font face="Helvetica, sans-serif" class="sans">
+<h3 class="H2"><i>1.1  &nbsp;&nbsp;
+Contents</i></h3>
+</font>
+
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95385"></a><a href="c-install.html#94337"><i class="title">1.2&nbsp;Overview</i></a></p>
+<dd><p class="Body"><a name="95392"></a><a href="c-install.html#93436"><i class="title">1.3&nbsp;Installing Tornado and Related Products</i></a></p>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="95464"></a><a href="c-install.html#94177"><i class="title">Host System Requirements</i></a></p>
+<dd><p class="Indent"><a name="96440"></a><a href="c-install.html#95858"><i class="title">Installation Media</i></a></p>
+<dd><p class="Indent"><a name="95468"></a><a href="c-install.html#96921"><i class="title">Installation Keys</i></a></p>
+<dd><p class="Indent"><a name="96441"></a><a href="c-install.html#95542"><i class="title">License Management</i></a></p>
+<dd><p class="Indent"><a name="96451"></a><a href="c-install.html#96410"><i class="title">Restricting Group Usage in a Solaris Environment</i></a></p>
+<dd><p class="Indent"><a name="96465"></a><a href="c-install.html#94228"><i class="title">Running SETUP</i></a></p>
+<dd><p class="Indent"><a name="95472"></a><a href="c-install.html#94301"><i class="title">Setting Environment Variables</i></a></p>
+<dd><p class="Indent"><a name="95476"></a><a href="c-install.html#94886"><i class="title">Running Tornado</i></a></p>
+<dd><p class="Indent"><a name="95480"></a><a href="c-install.html#94299"><i class="title">Uninstalling Tornado</i></a></p>
+</dl>
+
+<dd><p class="Body"><a name="95393"></a><a href="c-install.html#93456"><i class="title">1.4&nbsp;Installing and Administering a License Server</i></a></p>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="95493"></a><a href="c-install.html#93813"><i class="title">Installing and Configuring a License Server</i></a></p>
+<dd><p class="Indent"><a name="95501"></a><a href="c-install.html#94578"><i class="title">Administering a License Server</i></a></p>
+<dd><p class="Indent"><a name="96650"></a><a href="c-install.html#96623"><i class="title">UNIX License Server Lock File Permission Issues</i></a></p>
+<dd><p class="Indent"><a name="95961"></a><a href="c-install.html#95948"><i class="title">Getting Help With License Management</i></a></p>
+</dl>
+
+</dl>
+
+</dl>
+
+
+<br class="H2"><a name="94337"></a>
+<br class="H2navbar">
+<font face="Helvetica, sans-serif" class="sans">
+<h3 class="H2"><i>1.2  &nbsp;&nbsp;
+Overview</i></h3>
+</font>
+
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94334"></a>These instructions provide guidance for installing Tornado and related Wind River products, as well as for installing and administering a license server. The SETUP program is used for both product and license server installation. SETUP includes instructions for the details of the installation process itself. The following sections provide information about the prerequisites to installation, initiating the installation process, as well as post-installation configuration and use.</p>
+</dl>
+
+</dl>
+
+
+<br class="H2"><a name="93436"></a>
+<br class="H2navbar">
+<font face="Helvetica, sans-serif" class="sans">
+<h3 class="H2"><i>1.3  &nbsp;&nbsp;
+Installing Tornado and Related Products</i></h3>
+</font>
+
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="93519"></a>Before installing Tornado and related products, be sure that your system meets the basic requirements for supporting the product, that you have your installation key(s), and that you understand your license management options. After you have installed your product, make sure that you perform any additional configuration that is required for its use. </p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94177"></a>Host System Requirements</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95840"></a>Before you install Tornado or any related products, confirm that your host system provides the minimal support for the product, including the appropriate version of the operating system and patch level or service pack. </p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/caution.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="95845"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">CAUTION:  </font></b>
+Please consult the <i class="title">Tornado Release Notes</i> to be sure that your host system fulfills all of the requirements for proper installation of the product. The release notes also contain information about known problems relevant to installation. The release notes are available in your <i class="title">Getting Started</i> portfolio, as well as from: <br>
+<b><a href="http://www.windriver.com/support/resources/tornado22_bulletin.html" class="url">http://www.windriver.com/support/resources/tornado22_bulletin.html</a></b></div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+</dl>
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="95858"></a>Installation Media</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95972"></a>Tornado 2.2.1 is provided on two CDs:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="95859"></a>The Tornado 2.2.1/VxWorks 5.5.1 CD, which includes the host executables and target libraries for a specific architecture, as well as the VxWorks simulator.</li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="95860"></a>The BSPs/Drivers CD, which includes BSPs, drivers, and associated source code. </li></ul>
+</p>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95978"></a>Both CDs must be installed in order to use the product on a real target. The Tornado 2.2.1/VxWorks 5.5.1 CD must be installed first, and the BSPs/Drivers CD second. </p>
+<dd><p class="Body"><a name="96909"></a>VxWorks&nbsp;5.5.1 and run-time products are sold on a per-processor-family basis. Therefore, it is important to install the correct variation(s) of VxWorks run-time components that match the BSP(s) you will be using. </p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="96921"></a>Installation Keys</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95541"></a>Your installation keys are printed on the <i class="title">Installation Keys</i> sheet in the <i class="title">Getting Started</i> portfolio that contains the product CDs. If you cannot locate the <i class="title">Installation Keys</i> sheet, contact Wind River by e-mail at <b><a href="mailto:license@windriver.com" class="email">license@windriver.com</a></b>. Please include your sales order number. You can also call 1-800-USA-4-WRS (1-800-872-4977) if you are in North America and ask for Key Administration. In other locations, contact the nearest Wind River office.</p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="95542"></a>License Management</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94440"></a>Tornado and related tools require a license key file before they can be used. You have various options for procuring license information and creating the file for your system. The simplest method is to allow the SETUP program to access the Wind River licensing database automatically over the Internet during the installation process. You can also obtain license key information by phoning, FAXing, or emailing Wind River; and then create the file manually.</p>
+<dd><p class="Body"><a name="94438"></a>One of the following two licensing methods is associated with the purchase of your product: </p>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="94401"></a>Licensing controlled by a license server at your site. Server licensing allows you to use various host systems to run licensed products, up to the numeric limit of licenses you have purchased. The licenses are not tied to specific hardware. </li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="94402"></a>Node-locked licensing, which allocates a license to a single, specific machine. Node-locked licensing is useful for systems that are intended to be used when they are not in contact with a license server. Node-locked licensing is recommended, for example, for notebook computers that are used off-site and off the network on which a license server runs.</li></ul>
+</p>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94398"></a>If you are installing Tornado or other licensed products for use with a license server, make sure that the server has been installed and is running on your network. (For instructions on installing and configuring a license server, see <a href="c-install.html#93456"><i class="title">1.4&nbsp;Installing and Administering a License Server</i></a>.) </p>
+<dd><p class="Body"><a name="97253"></a>If you are installing a product for use with a node-locked license, your host system does not need to have access to a license server.</p>
+<dd><p class="Body"><a name="94923"></a>Note that you can complete product installation without a license key file. When you subsequently start Tornado (and the required key is not found) SETUP is automatically launched to allow license configuration. You can also run <b class="command">SETUP /L</b> (on Windows) or <b class="command">SETUP -L</b> (on Solaris) from the command line to perform license configuration.</p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="96410"></a>Restricting Group Usage in a Solaris Environment</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="96412"></a>The following instructions describe how you can limit access to Tornado to a specific group of users in a Solaris environment:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="96414"></a>
+Create a UNIX group for all Tornado users.</li></ol>
+<dd><ol class="List"><li value="2."><a name="96523"></a>
+Create a special user account for Tornado installation.</li></ol>
+<dd><ol class="List"><li value="3."><a name="96416"></a>
+Assign all Tornado users, including the special Tornado installation user account, to the Tornado user group. This provides full access for all Tornado users with their regular UNIX accounts.</li></ol>
+<dd><ol class="List"><li value="4."><a name="96548"></a>
+Use the special account to install Tornado; do not install Tornado as the superuser (root).</li></ol>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="96417"></a>Verify that the correct group is set as the default within the shell used for Tornado installation; use the <b class="command">id</b> and <b class="command">newgrp</b> commands to verify and set the group. For example:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96418"></a>% <b class="command">id 
+</b>uid=101(tornado) gid=1(other)</pre>
+</font>
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96419"></a>% <b class="command">newgrp my_group</b></pre>
+</font>
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96420"></a>% <b class="command">id 
+</b>uid=101(tornado) gid=101(my_group)</pre>
+</font>
+</dl>
+
+<dd><ol class="List"><li value="5."><a name="96533"></a>
+During Tornado installation, when you reach the SETUP file permissions screen, select write privileges for the group. The three rows in the dialog box set permissions for user, group and other respectively. By default, the group write permission box is not checked. </li></ol>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="96422"></a>The permissions are modifiable after the installation with the UNIX commands <b class="command">chmod</b>, <b class="command">chown</b> and <b class="command">chgrp</b>, although root access may be required. If necessary, the owner of the installation account can add group write permission, after the installation, in the following manner:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96423"></a>% <b class="command">cd </b><i class="textVariable">installDir 
+</i>% <b class="command">chmod -R g+w *</b></pre>
+</font>
+</dl>
+
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94228"></a>Running SETUP</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="96073"></a>For Tornado&nbsp;2.2.1, install the Tornado 2.2.1/VxWorks 5.5.1 CD first, and the BSP/Driver CD second. Each has its own installation key. Be sure to install at least the minimum required set of products for each CD. </p>
+<dd><p class="Body"><a name="96086"></a>From the Tornado/VxWorks CD, you must at least install: </p>
+<dl class="margin">
+
+<dd><p class="listspace">
+<ul class="Bullet2" type="disc"><li><a name="96087"></a>a compiler</li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet2" type="disc"><li><a name="96088"></a>Tornado Tools</li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet2" type="disc"><li><a name="96089"></a>VxWorks </li></ul>
+</p>
+</dl>
+
+<dd><p class="Body"><a name="96090"></a>From the BSP/Drivers CD, you must at least install:</p>
+<dl class="margin">
+
+<dd><p class="listspace">
+<ul class="Bullet2" type="disc"><li><a name="96091"></a>Driver Objects/Headers</li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet2" type="disc"><li><a name="96092"></a>at least one VxWorks BSP (not necessary if using only a simulator) </li></ul>
+</p>
+<dl class="margin">
+
+<dd><p class="Indent2"><a name="96810"></a>If you plan to install a third-party BSP, it must not overwrite or modify any Wind River-supplied files.</p>
+</dl>
+
+</dl>
+
+<dd><p class="Body"><a name="96213"></a>Optional products should be installed in the same directory tree as the version of Tornado for which they have been released.</p>
+<dd><p class="Body"><a name="96943"></a>The SETUP program provides instructions on its screens that describe how to proceed with each step of the installation process. The sequence of steps required for installation is dependent on your choice of how to procure a license key and the type of license management you select.</p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="96952"></a>WARNING!</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="96977"></a>Please note the following installation restrictions:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="96953"></a>Do not install Tornado&nbsp;2.2.1 in the same directory as any previous installation of Tornado, or in the same directory as versions of Tornado for other target operating systems.</li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="96960"></a>If you are using more than one target architecture (not including the VxWorks simulator), each set of CDs much must be installed in a separate tree. </li></ul>
+</p>
+<dd><p class="listspace">
+<ul class="Bullet" type="disc"><li><a name="96967"></a>Do not attempt to install in directories with spaces in the names.</li></ul>
+</p>
+</dl>
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="96068"></a>Windows</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="96108"></a>Installation must be performed by a user with administrative privileges. </p>
+<dd><p class="Body"><a name="96069"></a>The <b class="symbol_UC">SETUP</b> program starts automatically when you insert the CD. On subsequent occasions, you can start <b class="symbol_UC">SETUP</b> again on Windows by displaying the contents of the CD-ROM drive (using Windows Explorer or a comparable file manager) and double-clicking on <b class="symbol_UC">SETUP.EXE</b>, which is at the root of the CD-ROM file system. </p>
+</dl>
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="96166"></a>Solaris</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="94115"></a>Installation should not be performed by the superuser (root). </p>
+<dd><p class="Body"><a name="96210"></a>Solaris users whose <b class="symbol_UC">LANG</b> environment variable is not set to English must run the following command prior to installation: </p>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96869"></a>% <b class="command">unsetenv LANG</b> </pre>
+</font>
+</dl>
+
+<dd><p class="Body"><a name="96174"></a>Also see <a href="c-install.html#96410"><i class="title">Restricting Group Usage in a Solaris Environment</i></a>.</p>
+<dd><p class="Body"><a name="97824"></a>When you insert the CD, the file manager starts automatically, and you can start <b class="command">SETUP</b> from there. Or you can run <b class="command">SETUP </b>from the command line; for example: </p>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="95551"></a>% <b class="command">/cdrom/cdrom0/SETUP</b> </pre>
+</font>
+</dl>
+
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94301"></a>Setting Environment Variables</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="97132"></a>On Solaris hosts you must set environment variables for both license management and Tornado usage before you run Tornado and related products. </p>
+<dd><p class="Body"><a name="97154"></a>On Windows hosts, you only need to set environment variables if you did not use automatic license configuration during product installation, or if you want to start tools from the command line.</p>
+<dd><p class="Body"><a name="97695"></a>If you reset the license management environment variable after running Tornado on either host, you must delete a cache file (on Solaris) or registry entries (on Windows) before the new setting can take effect. </p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="94303"></a>Solaris</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="98006"></a>On Solaris hosts, you must set the <b class="symbol_UC">LM_LICENSE_FILE</b> environment variable after installation. For licensing controlled by a server, the variable must be set to the port number (the default is 27000) and server name. For node-locked licensing, the variable must be set to the location of the license file. The examples below illustrate settings for each of the licensing models (for the C shell):</p>
+</dl>
+
+<dl class="margin">
+
+<dd><font color="0000a0">
+<pre class="Code"><a name="98013"></a>setenv LM_LICENSE_FILE 27000@cosmos</pre>
+</font>
+<dd><font color="0000a0">
+<pre class="Code"><a name="98119"></a>setenv LM_LICENSE_FILE /usr/fred/LM/WRSLicense.lic</pre>
+</font>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="98007"></a>If you allow SETUP to retrieve license information from Wind River automatically, the required environment variable setting is described at the end of the installation process in the <font face="Helvetica, sans-serif" size="-1" class="sans">Finish</font> screen. It is also described in the <i class="textVariable">installDir</i><b class="file">/LMEnvVar.txt</b> file. </p>
+<dd><p class="Body"><a name="97623"></a>However, If you opted to get license key information for your installation by emailing, FAXing, or phoning Wind River, you must set the <b class="symbol_UC">LM_LICENSE_FILE</b> environment variable manually. This process is described in Wind River's response to your request.</p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/note.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="97213"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">NOTE:  </font></b>
+If you reset the license server environment variable after using Tornado, you must also delete <b class="file">~/.flexlmrc</b>, which is used to cache the keys used for license management. </div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="97752"></a>You can use the <b class="symbol_UC">LM_LICENSE_FILE</b> variable to access more than one license server or more than one license key file (for node-locked licensing). Doing so ensures that you are able to obtain a license by providing access more than one server, or that you have access to all the license keys that you need for the set of tools that you are using (for node-locked licensing). To do so, reference an existing setting and append the new value, or simply edit the original setting and append the new value(s). The following examples provide illustrations for both license server environments and node-locked licensing (for the C shell):</p>
+</dl>
+
+<dl class="margin">
+
+<dd><font color="0000a0">
+<pre class="Code"><a name="97987"></a>setenv LM_LICENSE_FILE ${LM_LICENSE_FILE}:27000@cosmos</pre>
+</font>
+<dd><font color="0000a0">
+<pre class="Code"><a name="98085"></a>setenv LM_LICENSE_FILE 27000@cosmosz:27000@warthog:27000@ubu</pre>
+</font>
+<dd><font color="0000a0">
+<pre class="Code"><a name="98049"></a>setenv LM_LICENSE_FILE ${LM_LICENSE_FILE}:/usr/fred/LM/WRSLicense.lic</pre>
+</font>
+<dd><font color="0000a0">
+<pre class="Code"><a name="98098"></a>setenv LM_LICENSE_FILE /usr/me/LM/WRSLicense.lic:/usr/you/LM/WRSLicense.lic</pre>
+</font>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="98132"></a>In order to run Tornado, you must also configure your host environment as described in the <i class="title">Tornado User's Guide: Setup and Startup</i>. As a short-cut, you can source either <b class="file">torVars.csh</b> or <b class="file">torVars.sh</b> (depending on your host shell), which can be found in <i class="textVariable">installDir</i><b class="file">/host/sun4-solaris2/bin</b>. If you install your product using the automated license configuration method, the <b class="file">torVars</b> shell scripts automatically include the setting for license management as well.</p>
+</dl>
+
+</dl>
+<dl class="margin">
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="94809"></a>Windows</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="96828"></a>On Windows hosts, you do not need to set the <b class="symbol_UC">LM_LICENSE_FILE</b> environment variable if you allowed SETUP to retrieve license information from Wind River automatically. In this case, the variable is set during the installation process.</p>
+<dd><p class="Body"><a name="97890"></a>However, If you opted to obtain license key information for your installation by emailing, FAXing, or phoning Wind River, you must set the <b class="symbol_UC">LM_LICENSE_FILE</b> environment variable manually. </p>
+</dl>
+
+<dl class="margin">
+
+<dd><b class="HU-run"><a name="97634"></a><font face="Helvetica, sans-serif" size="-1" class="sans">
+Windows 2000 Pro or XP Pro</font></b></dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="97911"></a>Set the environment variable manually as follows:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="97580"></a>
+Go to <font face="Helvetica, sans-serif" size="-1" class="sans">Control Panel&gt;System</font>.</li></ol>
+<dd><ol class="List"><li value="2."><a name="97112"></a>
+Click on the <font face="Helvetica, sans-serif" size="-1" class="sans">Advanced</font> tab.</li></ol>
+<dd><ol class="List"><li value="3."><a name="97113"></a>
+Click on the<font face="Helvetica, sans-serif" size="-1" class="sans"> Environment Variables</font> button.</li></ol>
+<dd><ol class="List"><li value="4."><a name="97114"></a>
+Click on the <font face="Helvetica, sans-serif" size="-1" class="sans">New</font> button under the <font face="Helvetica, sans-serif" size="-1" class="sans">System Variables</font> section.</li></ol>
+<dd><ol class="List"><li value="5."><a name="97115"></a>
+In the <font face="Helvetica, sans-serif" size="-1" class="sans">Variable Name</font> edit box, enter <b class="symbol_UC">LM_LICENSE_FILE</b>.</li></ol>
+<dd><ol class="List"><li value="6."><a name="97116"></a>
+In the <font face="Helvetica, sans-serif" size="-1" class="sans">Variable Value</font> edit box:</li></ol>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="97500"></a>For license server sites, enter the license server port number and name; for example:<b class="symbol_lc">  <br>
+27000@cosmos</b></p>
+<dd><p class="Indent"><a name="97501"></a>For node-locked licensing, enter the full path for the license file on your system; for example: <br>
+<b class="file">C:\Tornado2.2.1\.wind\license\WRSLicense.lic</b></p>
+</dl>
+
+<dd><ol class="List"><li value="7."><a name="97533"></a>
+Click <font face="Helvetica, sans-serif" size="-1" class="sans">OK</font>.</li></ol>
+</dl>
+
+<dl class="margin">
+
+<dd><b class="HU-run"><a name="97117"></a><font face="Helvetica, sans-serif" size="-1" class="sans">
+Windows NT 4.0</font></b></dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="97915"></a>Set the environment variable manually as follows:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="97118"></a>
+Log on to Windows using the same account that was used to install the license manager.</li></ol>
+<dd><ol class="List"><li value="2."><a name="97119"></a>
+Go to <font face="Helvetica, sans-serif" size="-1" class="sans">Start&gt;Settings&gt;Control Panel&gt;System</font>.</li></ol>
+<dd><ol class="List"><li value="3."><a name="97120"></a>
+Choose the <font face="Helvetica, sans-serif" size="-1" class="sans">Environment</font> tab.</li></ol>
+<dd><ol class="List"><li value="4."><a name="97121"></a>
+In the <font face="Helvetica, sans-serif" size="-1" class="sans">Variable</font> edit box, enter <b class="symbol_UC">LM_LICENSE_FILE</b>.</li></ol>
+<dd><ol class="List"><li value="5."><a name="97521"></a>
+In the <font face="Helvetica, sans-serif" size="-1" class="sans">Value</font> edit box:</li></ol>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="97777"></a>For license server sites, enter the license server port number and name; for example: <br>
+<b class="symbol_lc">27000@cosmos</b></p>
+<dd><p class="Indent"><a name="97778"></a>For node-locked licensing, enter the full path for the license file on your system; for example: <br>
+<b class="file">C:\Tornado2.2.1\.wind\license\WRSLicense.lic</b></p>
+</dl>
+
+<dd><ol class="List"><li value="6."><a name="97123"></a>
+Click <font face="Helvetica, sans-serif" size="-1" class="sans">OK</font>.</li></ol>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/note.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="97664"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">NOTE:  </font></b>
+If you reset the license server environment variable after it is initially set (automatically or manually), you must also use <b class="command">regedit</b> to delete the Windows registry keys <b class="symbol_UC">LM_LICENSE_FILE</b> and <b class="symbol_UC">WRSD_LICENSE_FILE</b> in HKEY_LOCAL_MACHINE\SOFTWARE\FLEXlm&nbsp;License&nbsp;Manager.The registry keys are used to cache the license keys used for license management. </div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/note.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="97468"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">NOTE:  </font></b>
+If you wish to use command-line tools, or to invoke GUI tools from the command line on Windows, you must execute <b class="file">torVars.bat</b>, which is located in <i class="textVariable">installDir</i><b class="file">\host/x86-win32\bin</b>.</div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+</dl>
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94886"></a>Running Tornado</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94887"></a>For information about setting up your host-target development environment, starting Tornado, and booting VxWorks, see the <i class="title">Tornado User's Guide: Setup and Startup</i>. </p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94299"></a>Uninstalling Tornado</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94166"></a>Should you need to do so, Tornado can be easily uninstalled.</p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/warning.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="94009"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">WARNING:  </font></b>
+Before uninstalling Tornado, make copies of any Tornado files you have modified. Uninstalling Tornado removes all files that were part of the original distribution list. If you uninstall Tornado 2.2.1 from a Windows host, and you were previously using another version of Tornado 2.x with the Tornado registry running as a service, the old registry service will not be automatically restored.</div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+</dl>
+<dl class="margin">
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="94015"></a>Solaris</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="95097"></a>Before you remove Tornado, first stop the Tornado registry and any target servers that are running by killing the <b class="symbol_lc">wtxregd</b> and <b class="symbol_lc">tgtsvr</b> processes. Then run the following command:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal"><a name="95100"></a>%<i class="textVariable"> installDir</i><font color="00a000"><b>/SETUP/UNINST </b></font><i class="textVariable">installDir</i></pre>
+</font>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94018"></a>If you plan to re-install Tornado afterwards, also remove the <i class="textVariable">installDir</i><b class="file">/.wind</b> directory.</p>
+</dl>
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="94001"></a>Windows</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="95328"></a>Before you remove Tornado, you must shut down all Tornado tools and components, including those you may have arranged to start automatically, such as the target server and Tornado registry. Use standard Windows Control Panel facilities or the <b class="command">Tornado Uninstall</b> program. </p>
+<dd><p class="Body"><a name="95329"></a>To use the Windows Control Panel facilities to uninstall Tornado:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="95330"></a>
+Select <font face="Helvetica, sans-serif" size="-1" class="sans">Start</font>&gt;<font face="Helvetica, sans-serif" size="-1" class="sans">Settings</font>&gt;<font face="Helvetica, sans-serif" size="-1" class="sans">Control Panel</font>.</li></ol>
+<dd><ol class="List"><li value="2."><a name="93985"></a>
+Double-click <font face="Helvetica, sans-serif" size="-1" class="sans">Add/Remove Programs.</font></li></ol>
+<dd><ol class="List"><li value="3."><a name="93986"></a>
+Select <font face="Helvetica, sans-serif" size="-1" class="sans">Tornado&nbsp;2.2.1 </font>from the list.</li></ol>
+<dd><ol class="List"><li value="4."><a name="93987"></a>
+Click the <font face="Helvetica, sans-serif" size="-1" class="sans">Add/Remove</font> button.</li></ol>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95106"></a>To use the <b class="command">Uninstall</b> program to uninstall Tornado:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="93989"></a>
+Select the <font face="Helvetica, sans-serif" size="-1" class="sans">Tornado</font> program folder from the <font face="Helvetica, sans-serif" size="-1" class="sans">Start</font> menu under the <font face="Helvetica, sans-serif" size="-1" class="sans">Programs</font> folder (this is the default folder name and location; another may have been selected at installation.) </li></ol>
+<dd><ol class="List"><li value="2."><a name="93990"></a>
+Select <font face="Helvetica, sans-serif" size="-1" class="sans">Tornado 2.2.1 Uninstall</font>.</li></ol>
+</dl>
+
+</dl>
+
+
+<br class="H2"><a name="93456"></a>
+<br class="H2navbar">
+<font face="Helvetica, sans-serif" class="sans">
+<h3 class="H2"><i>1.4  &nbsp;&nbsp;
+Installing and Administering a License Server</i></h3>
+</font>
+
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95119"></a>A license server must be installed and configured before Tornado or any other licensed products can be used, unless you have configured your system with a node-locked license. </p>
+<dd><p class="Body"><a name="93740"></a>A license server manages a pool of licenses for use by Tornado installations on other hosts on a shared network. More than one license server can be set up to manage separate pools of licenses, which can be useful for dividing licenses among development teams, for server load-balancing or redundancy, and so on.</p>
+<dd><p class="Body"><a name="95937"></a>License management software for Tornado&nbsp;2.2.1 is FLEXlm 8.8 (b) from Macrovision. This package offers a full complement of tools for administering license management. Documentation is available on the Web at:</p>
+<dd><p class="Body"><a name="96728"></a><b><a href="http://www.macrovision.com/solutions/esd/index.html" class="url">http://www.macrovision.com/solutions/esd/index.html</a></b></p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/note.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="96988"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">NOTE:  </font></b>
+ This section is relevant for system administrators who need to install the network license server, and not for typical end-users of Tornado. It is not part of standard product installation.</div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+</dl>
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="93813"></a>Installing and Configuring a License Server</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="93822"></a>You install the Wind River license server with the same SETUP program used by Tornado and other products. The SETUP program provides instructions on how to proceed with each step of the installation process. </p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+<dd>
+<p class="table">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td colspan=1 rowspan=1></td><td><hr></td></tr>
+<tr valign="top"><td>
+<img border="0" alt="*" src="icons/note.gif">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td colspan=1 rowspan=1><div class="CalloutCell"><a name="93791"></a>
+<b class="symbol_UC"><font face="Helvetica, sans-serif" size="-1" class="sans">NOTE:  </font></b>
+To install only license management binaries and utilities files, you can invoke <b class="symbol_UC">SETUP</b> with the <b class="symbol_lc">-F</b> or <b class="symbol_lc">/F</b> option.</div>
+</td>
+</tr>
+<tr valign="top">
+<td colspan=1 rowspan=1></td>
+<td colspan=1 rowspan=1><hr>
+</td>
+</tr>
+
+<tr valign="middle">
+<td colspan="20">
+
+</td>
+</tr>
+</table>
+</p>
+
+
+
+</dl>
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="94578"></a>Administering a License Server</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="93835"></a>The license server must be started in order to make licenses available to Tornado installations on a network.</p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="93836"></a>Solaris</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="94034"></a>To start up the license manager, perform the following steps manually or add them to a system startup script so that the server is started automatically when the system is rebooted:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="93837"></a>
+Change directory to the location where the license utilities are installed:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="93838"></a>% <font color="00a000"><b>cd </b></font><i class="textVariable">installLic</i><font color="00a000"><b>/host/sun4-solaris2/bin</b></font></pre>
+</font>
+</dl>
+
+<dd><ol class="List"><li value="2."><a name="93839"></a>
+Issue the startup command:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="93840"></a>% <font color="00a000"><b>./lmgrd -c</b></font><i class="textVariable"> installLic</i><font color="00a000"><b>/.wind/license/WRSLicense.lic -l</b></font> <i class="textVariable">installLic</i><font color="00a000"><b>/.wind/license/lmgrd.log [-x lmdown] </b></font></pre>
+</font>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Indent"><a name="93841"></a>In the above example, the optional switch <b class="command">-l</b> directs output to a log file, <b class="file">lmgrd.log</b>. The optional parameter <b class="command">-x lmdown</b> prevents the shutdown of the license manager by the <b class="command">lmdown</b> utility. </p>
+</dl>
+
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="93842"></a>To stop a license manager process, do the following:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="93843"></a>
+If you did not use <b class="command">-x lmdown</b>, issue the shut-down command:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="93844"></a>% <font color="00a000"><b>lmutil lmdown -c</b></font><i class="textVariable"> installLic</i><font color="00a000"><b>/.wind/license/WRSLicense.lic</b></font></pre>
+</font>
+</dl>
+
+<dd><ol class="List"><li value="2."><a name="93845"></a>
+If you did use <b class="command">-x lmdown</b>, determine the process ID (<i class="textVariable">pid</i>) of the license manager process:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="93846"></a>% <font color="00a000"><b>ps | grep lmgrd</b></font></pre>
+</font>
+</dl>
+
+<dd><ol class="List"><li value="3."><a name="93847"></a>
+Kill the process:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="93848"></a>% <font color="00a000"><b>kill </b></font><i class="textVariable">pid</i>&nbsp;</pre>
+</font>
+</dl>
+
+</dl>
+
+<dd><font face="Helvetica, sans-serif" size="-1" class="sans">
+<h5 class="HU"><i><a name="93776"></a>Windows</i></h5>
+</font><dl class="margin">
+
+<dd><p class="Body"><a name="94037"></a>Use the license manager utility to start the license manager:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="94038"></a>
+Use Windows Explorer to open the folder for the license manager utilities.</li></ol>
+<dd><ol class="List"><li value="2."><a name="94039"></a>
+Double-click <b class="file">lmtools.exe</b>, and then go to the <font face="Helvetica, sans-serif" size="-1" class="sans">Start/Stop/Reread</font> tab.</li></ol>
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94040"></a>You can also start the license server from a command line. Follow the steps below, substituting for <i class="textVariable">installLic</i> the directory where the license manager was installed.</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="94041"></a>
+Change directory to the location where the license utilities are installed:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="94042"></a>c:\&gt; <font color="00a000"><b>cd </b></font><i class="textVariable">installLic</i><font color="00a000"><b>\host\x86-win32\bin</b></font></pre>
+</font>
+</dl>
+
+<dd><ol class="List"><li value="2."><a name="94043"></a>
+Issue the startup command:</li></ol>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="94044"></a>c:\&gt; <font color="00a000"><b>lmgrd -z -c </b></font><i class="textVariable">installLic</i><font color="00a000"><b>\.wind\license\WRSLicense.lic -l</b></font> <i class="textVariable">installLic</i><font color="00a000"><b>\.wind\license\lmgrd.log [-x lmdown]</b></font></pre>
+</font>
+</dl>
+
+</dl>
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="94045"></a>To stop a license server that has been started manually using the above steps, do the following:</p>
+</dl>
+
+<dl class="margin">
+
+<dd><ol class="List"><li value="1."><a name="94046"></a>
+Open the Windows Task Manager (<kbd>CTRL+SHIFT+ESC</kbd>).</li></ol>
+<dd><ol class="List"><li value="2."><a name="94047"></a>
+Choose the <font face="Helvetica, sans-serif" size="-1" class="sans">Processes</font> tab.</li></ol>
+<dd><ol class="List"><li value="3."><a name="94048"></a>
+Select the process named <b class="command">lmgrd</b>.</li></ol>
+<dd><ol class="List"><li value="4."><a name="94049"></a>
+Click the <font face="Helvetica, sans-serif" size="-1" class="sans">End Process</font> button.</li></ol>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="96623"></a>UNIX License Server Lock File Permission Issues</i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="96625"></a>On UNIX systems, the license server uses a lock file, which is created in <b class="file">/var/tmp</b> by default. For example, the file listing looks like this:</p>
+<dl class="margin">
+
+<dd><font color="009090">
+<pre class="Terminal2"><a name="96627"></a>% <b class="command">ls -l /var/tmp/lockwrsd 
+</b>-rw-r--r--   1 tornado  other          0 Sep 12 18:16 /var/tmp/lockwrsd</pre>
+</font>
+</dl>
+
+<dd><p class="Body"><a name="96630"></a>When the license manager (<b class="symbol_lc">lmgrd</b>) is started for the first time, the lock file is created with the permissions of the user who starts the daemon. You may need to modify the file permissions to ensure that other users can start the server. </p>
+</dl>
+
+</dl>
+
+<font face="Helvetica, sans-serif" class="sans">
+<h4 class="H4"><i><a name="95948"></a>Getting Help With License Management </i></h4>
+</font>
+<dl class="margin">
+
+<dl class="margin">
+
+<dd><p class="Body"><a name="95949"></a>If you encounter license management problems, they may be resolved by consulting the license management support Web page:</p>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="95950"></a><b><a href="http://www.windriver.com/windsurf/LMSupport/" class="url">http://www.windriver.com/windsurf/LMSupport/</a></b></p>
+</dl>
+
+<dd><p class="Body"><a name="95951"></a>Or the Tornado&nbsp;2.2.1 Support Web page:</p>
+<dl class="margin">
+
+<dd><p class="Indent"><a name="95952"></a><b><a href="http://www.windriver.com/support/resources/tornado22_bulletin.html" class="url">http://www.windriver.com/support/resources/tornado22_bulletin.html</a></b></p>
+</dl>
+
+<dd><p class="Body"><a name="95946"></a></p>
+</dl>
+
+</dl>
+
+
+<a name="foot"><hr></a>
+
+
+
+</body>
+
+</html>
+<!---
+This file generated by WRS documentation (jim irwin), Wind River Systems, Inc.
+    conversion tool:  Quadralay WebWorks Publisher Professional Edition 6.0.7 --->
+

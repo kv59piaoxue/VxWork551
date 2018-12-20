@@ -1,0 +1,19 @@
+; INF file for License Management (flexLM)
+
+[AddIcon]
+; format:
+; group, item, exe, [args], [dir], [fmin], [iconIndex], [iconPath], [logValue], [osversion], [infVals]
+Startup,TornadoLM,host\x86-win32\bin\lmgrd.exe,-app -z -c %destDirGet%\.wind\license\WRSLicense.lic,host\x86-win32\bin,1,0,,noLog,,lmStartup
+
+[AddRegistry]
+; format:
+; reg-root-string, subkey, value-name, value, [int], [logValue], [infVals]
+HKLMCU,Software\%WRS%,lmStartupOption,%setupVals(lmStartupOption)%,,,addLMOption
+HKLM,Software\FLEXlm License Manager\%lmVals(lmServName)%,License,%regLicense%
+HKLM,Software\FLEXlm License Manager\%lmVals(lmServName)%,Lmgrd,%regLmgrd%
+HKLM,Software\FLEXlm License Manager\%lmVals(lmServName)%,LMGRD_LOG_FILE,%regLmgrd_log_file%
+
+[AddService]
+; format:
+; service name, exe, path, [dependency], [infVals]
+%lmVals(lmServName)%,lmgrd.exe,host\x86-win32\bin,,lmNTServ

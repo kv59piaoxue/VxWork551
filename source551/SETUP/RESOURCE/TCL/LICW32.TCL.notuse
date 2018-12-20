@@ -1,0 +1,940 @@
+# LICW32.TCL - UITcl script for Windows License Installation
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,22jul98,tcy  moved license messages from MESSAGES.TCL
+# 01b,22jul98,tcy  moved licenseHomeDirGet/Set () from LICW32.TCL
+# 01a,14jul98,tcy  moved from INSTW32.TCL 
+
+###########################################################################
+
+proc pageCreate(licenseChoice) {} {
+    global ctrlVals
+    global setupVals
+
+    set setupVals(licComp) ""
+    set ctrlVals(pageList) $ctrlVals(pageListBack)
+
+    set ctrlVals(volatileFrm) [list \
+            [list label -name msg1 \
+                        -title [strTableGet 1290_LICENSE_CHOICE] \
+                        -x 100 -y 10 -w 187 -h 16] \
+            [list list  -name listCtrl \
+                        -x 100 -y 32 -w 150 -h 32] \
+            [list label -name msg2 \
+                        -title [strTableGet 1291_LICENSE_CHOICE] \
+                        -x 100 -y 80 -w 205 -h 8] \
+            [list choice -name remote \
+                        -title [strTableGet 1300_LICENSE_CHOICE_0] \
+                        -newgroup -auto \
+                        -callback {onLicChoice remote} \
+                        -x 110 -y 92 -w 185 -h 12] \
+            [list choice -name haveKey \
+                        -title [strTableGet 1300_LICENSE_CHOICE_1] \
+                        -auto \
+                        -callback {onLicChoice haveKey} \
+                        -x 110 -y 103 -w 185 -h 12] \
+            [list choice -name email \
+                        -title [strTableGet 1310_LICENSE_CHOICE_2] \
+                        -auto \
+                        -callback {onLicChoice email} \
+                        -x 110 -y 114 -w 185 -h 12] \
+            [list choice -name call \
+                        -title [strTableGet 1320_LICENSE_CHOICE_3] \
+                        -auto \
+                        -callback {onLicChoice call} \
+                        -x 110 -y 125 -w 185 -h 12] \
+    ]
+
+    set w [dlgFrmCreate [strTableGet 1520_TITLE_LICENSE_CHOICE]]
+
+    foreach featureId [cdInfoGet featureIdList] {
+        lappend setupVals(licComp) "[featureDescGet $featureId]"
+    }
+
+    controlValuesSet $w.listCtrl $setupVals(licComp)
+    controlValuesSet $w.$setupVals(licAction) 1
+    controlValuesSet $ctrlVals(mainWindow).nextButt "&Next >"
+}
+
+
+proc pageProcess(licenseChoice) {} {
+    global setupVals
+
+    if ![catch {genHostCode [info host]} retVal] {
+        set setupVals(hostId) $retVal
+    } {
+        set setupVals(hostId) ""
+        uninstLog setupLog "\tFailed to detect HostId: $retVal"
+    }
+
+    set setupVals(licenseNum) [setupLicenseNumGet]
+
+    switch $setupVals(licAction) {
+        haveKey {
+            pageRemove licEmail
+            pageRemove licCall
+            pageRemove remoteLicenseHost
+        }
+        email {
+            pageRemove licCall
+            pageRemove remoteLicenseHost
+        }
+        call {
+            pageRemove licEmail
+            pageRemove remoteLicenseHost
+        }
+        remote {
+            pageRemove licEmail
+            pageRemove licCall
+            pageRemove licenseKey
+        }
+        manual {
+            pageRemove licEmail
+            pageRemove licCall
+            pageRemove licenseKey
+            pageRemove remoteLicenseHost
+        }
+    }
+    return 1
+}
+
+
+proc pageCreate(licenseKey) {} {
+    global ctrlVals
+    global setupVals
+
+    set ctrlVals(volatileFrm) [list \
+                [list label -name msg1 \
+                            -title [strTableGet 1260_LICENSE_KEY \
+                                                $setupVals(hostName)] \
+                            -x 100 -y 10 -w 205 -h 25] \
+                [list label -name msg2 -title "&License Key" \
+                            -x 100 -y 37 -w 85 -h 10] \
+                [list text -name licenseKeyText \
+                           -x 100 -y 49 -w 150 -h 12] \
+                [list list -name licList \
+                           -callback keyInfoUpdate \
+                           -x 100 -y 63 -w 150 -h 38] \
+                [list group -name licInfoGroup \
+                            -title "Key Information" \
+                            -x 100 -y 106 -w 150 -h 64] \
+                [list button -name add \
+                            -title "&Add" \
+                            -callback onAddLic \
+                            -x 265 -y 49 \
+                            -w 40 -h 12] \
+                [list button -name remove \
+                            -title "&Remove" \
+                            -callback onRemoveLic \
+                            -x 265 -y 63 \
+                            -w 40 -h 12] \
+    ]
+
+    set x0 107
+    set y0 116
+    set txtList {"Feature Id:" "Feature Name:" "Licenses:" \
+                 "Start Date:" "Expire Date:"}
+
+    set x1 [expr $x0 + 50]
+    set i 1
+
+    foreach header $txtList {
+        lappend ctrlVals(volatileFrm) [list label -name $header \
+                -title $header \
+                -x "$x0" -y "$y0" \
+                -w 47 -h 10]
+
+        lappend ctrlVals(volatileFrm) [list label -name "ctrl$i" \
+                -title "" \
+                -x "$x1" -y "$y0" \
+                -w 90 -h 10]
+
+        incr y0 10
+        incr i
+    }
+
+    set w [dlgFrmCreate [strTableGet 1510_TITLE_LICENSE_KEY]]
+
+    controlValuesSet $ctrlVals(mainWindow).licenseKeyText \
+                "$setupVals(licenseKey)"
+
+    controlValuesSet $ctrlVals(mainWindow).licList \
+                $setupVals(licenseKeyList)
+
+    controlValuesSet $ctrlVals(mainWindow).nextButt "&Next >"
+    controlFocusSet $ctrlVals(mainWindow).licenseKeyText
+}
+
+
+proc pageProcess(licenseKey) {} {
+    global setupVals
+    global ctrlVals
+
+    set retVal 0
+    set exitMsg [strTableGet 1270_LICENSE_KEY_ERROR]
+
+    if {[llength $setupVals(licenseKeyList)] != 0} {
+
+        if {![file isdirectory [licenseHomeDirGet]]} {
+            file mkdir [licenseHomeDirGet]
+        }
+
+        beginWaitCursor
+
+        # copy over the license files
+
+        licenseFilesCopy
+
+        # create the license file
+
+        set binDir "[destDirGet]\\host\\[windHostTypeGet]\\bin"
+
+        foreach key $setupVals(licenseKeyList) {
+            if [catch {putKeyfile [join $key ""] \
+                                  [info host] \
+                                  [licenseHomeDirGet]} result] {
+
+                uninstLog setup \
+                    "\t[strTableGet 1280_LICENSE_KEY_ERROR_1 $result]"
+
+                messageBox [strTableGet 1280_LICENSE_KEY_ERROR_1 $result]
+                endWaitCursor
+                return 0
+            }
+        }
+
+        # install Wind License Manager as a service on NT, in the \
+        # startup group on 95.  Start the server if it is not already \
+        # running
+
+        exitMsgSet [strTableGet 1261_LICENSE_KEY_FINISH_OK]
+
+        set wlmdPath [systemDirGet]\\WLMD.EXE
+
+        if {$ctrlVals(NT) && ($setupVals(isWlmdRunning) != 1)} {
+            set exePath "[systemDirGet]\\WLMD.EXE"
+            set licServiceName "WindLM"
+
+            if {![catch {setupServiceInstall $licServiceName $wlmdPath ""}\
+                error]} {
+                uninstLog resource "service\t$licServiceName"
+            }
+            catch {setupServiceStart $licServiceName} error
+
+        } elseif {! $ctrlVals(NT)} {
+            set exeDir "[setupWinDirGet]\\system"
+
+            itemCreateLog Startup WindLM $wlmdPath [systemDirGet] \
+                          $ctrlVals(admin)
+
+            if {$setupVals(isWlmdRunning) != 1} {
+                if {[catch {processCreate -hidden $wlmdPath \
+                                          [licenseHomeDirGet]} error]} {
+
+                    exitMsgSet [strTableGet 1262_LICENSE_KEY_FINISH_BAD]
+                }
+            }
+        }
+
+        windowShow $ctrlVals(mainWindow) 0
+        set retVal 1
+    } {
+        messageBox [strTableGet 1270_LICENSE_KEY_ERROR]
+        set retVal 0
+    }
+
+    endWaitCursor
+    return $retVal
+}
+
+
+proc pageCreate(licEmail) {} {
+    global setupVals
+    global ctrlVals
+
+    set ctrlVals(volatileFrm) [list \
+                   [list label -name msg \
+                               -title [strTableGet 1330_LICENSE_MAIL] \
+                               -x 100 -y 10 -w 205 -h 24] \
+                   [list text  -name licenseInfo \
+                               -multiline -hscroll \
+                               -vscroll -readonly \
+                               -x 100 -y 40 -w 205 -h 130] \
+    ]
+
+    set mailMsg "[strTableGet 1340_LICENSE_MAIL_HEADER_LINE1]\
+         \r\n\r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE2]\
+         \r\n\r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE3 [userNameGet]]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE4 [companyNameGet]]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE5a [instKeyGet]]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE6 \
+                              $setupVals(licenseNum)]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE7 \
+                              $setupVals(hostName)]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE8 \
+                              $setupVals(hostId)]\
+         \r\n\r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE9]\
+         \r\n\r\n"
+
+    foreach featureId [cdInfoGet featureIdList] {
+        append mailMsg "[featureDescGet $featureId] (id = $featureId)\r\n"
+    }
+
+    set setupVals(mailMsg) $mailMsg
+    set w [dlgFrmCreate [strTableGet 1530_TITLE_LICENSE_MAIL]]
+    controlValuesSet $w.licenseInfo "$setupVals(mailMsg)"
+}
+
+
+proc pageProcess(licEmail) {} {
+    global setupVals
+    global ctrlVals
+
+    set setupVals(licAction) haveKey
+    set ctrlVals(pageList) $ctrlVals(pageListBack)
+
+    set ctrlVals(currPage) folderSelect
+    return [mailSend]
+}
+
+
+proc pageCreate(licCall) {} {
+    global setupVals
+    global ctrlVals
+
+    set ctrlVals(volatileFrm) [list \
+                    [list label -name msg \
+                                -title [strTableGet 1350_LICENSE_CALL] \
+                                -x 100 -y 10 -w 205 -h 24] \
+                    [list text  -name callInfo \
+                               -multiline -hscroll -vscroll \
+                               -readonly \
+                               -x 100 -y 48 -w 205 -h 120] \
+    ]
+
+    set w [dlgFrmCreate [strTableGet 1540_TITLE_LICENSE_CALL]]
+
+    set callMsg "[strTableGet 1340_LICENSE_MAIL_HEADER_LINE7 \
+                              $setupVals(hostName)]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE8 \
+                              $setupVals(hostId)]\
+             \r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE6 \
+                              $setupVals(licenseNum)]\
+         \r\n\r\n[strTableGet 1340_LICENSE_MAIL_HEADER_LINE9]\
+         \r\n\r\n"
+
+    foreach featureId [cdInfoGet featureIdList] {
+        append callMsg "[featureDescGet $featureId] (id = $featureId)\r\n"
+    }
+
+    controlValuesSet $w.callInfo $callMsg
+}
+
+
+proc pageProcess(licCall) {} {
+    global setupVals
+    global ctrlVals
+
+    set setupVals(licAction) haveKey
+    set ctrlVals(pageList) $ctrlVals(pageListBack)
+
+    set ctrlVals(currPage) folderSelect
+    return 1
+}
+
+
+proc pageCreate(remoteLicenseHost) {} {
+    global ctrlVals
+    global setupVals
+
+    set msg0 [strTableGet 1353_LICENSE_REMOTE]
+
+    set ctrlVals(volatileFrm) [list \
+             [list label -name msg0 -title $msg0 \
+                         -x 100 -y 10 -w 205 -h 64] \
+             [list label -name msg1 -title "Host Name:" \
+                         -x 100 -y 94 -w 40 -h 10] \
+             [list text -name remoteLicHost \
+                        -x 150 -y 92 -w 148 -h 13] \
+    ]
+
+    set w [dlgFrmCreate [strTableGet 1561_TITLE_LICENSE_REMOTE]]
+    controlValuesSet $w.remoteLicHost [windLmHostValueRead]
+    controlFocusSet $w.remoteLicHost
+}
+
+
+proc pageProcess(remoteLicenseHost) {} {
+    global ctrlVals
+    global setupVals
+
+    set retVal 1
+    beginWaitCursor
+    set setupVals(licenseHost) \
+        [controlValuesGet $ctrlVals(mainWindow).remoteLicHost]
+
+    if ![pingServer $setupVals(licenseHost)] {
+        messageBox "[strTableGet 1357_LICENSE_REMOTE_FAIL\
+                                 $setupVals(licenseHost)]"
+        endWaitCursor
+        return 0
+    }
+
+    if {![regexp {^[ ]*$} "$setupVals(licenseHost)"]} {
+        windLmHostValueWrite $setupVals(licenseHost)
+        exitMsgSet [strTableGet 1354_LICENSE_REMOTE]
+    } {
+        messageBox [strTableGet 1072_WARN_1]
+        set retVal 0
+    }
+
+    endWaitCursor
+    return $retVal
+}
+
+
+proc pageCreate(licenseFinish) {} {
+    global setupVals
+    global ctrlVals
+
+    windowShow $ctrlVals(mainWindow) 0
+    uninstLog setupLog "[cdInfoGet number] SETUP"
+    uninstLog setupLog [strTableGet 1261_LICENSE]
+
+    messageBox -informationico [exitMsgGet]
+    nextCallback
+}
+
+
+proc pageProcess(licenseFinish) {} {
+    return 1
+}
+
+
+proc windLmHostValueWrite {value} {
+    global setupVals
+    global ctrlVals
+
+    set regPath "Software\\$setupVals(WRS)\\$setupVals(prodRegEntry)"
+    regValueWriteLog HKEY_CURRENT_USER \
+        $regPath WIND_LMHOST $value noLog
+}
+
+
+proc windLmHostValueRead {} {
+    global setupVals
+    global ctrlVals
+
+    if ![info exists setupVals(licenseHost)] {
+        set setupVals(licenseHost) ""
+
+        if {![catch {sysRegistryValueRead HKEY_CURRENT_USER \
+                "Software\\$setupVals(WRS)\\$setupVals(prodRegEntry)" \
+                WIND_LMHOST} retVal]} {
+
+            set setupVals(licenseHost) $retVal
+        }
+    }
+
+    return $setupVals(licenseHost)
+}
+
+
+proc pageCreate(wlmdDetect) {} {
+    global ctrlVals
+    global setupVals
+
+    set ctrlVals(volatileFrm) [list \
+             [list label -name msg0 \
+                         -title [strTableGet 1358_LICENSE_SERVER_DETECT]\
+                         -x 100 -y 10 -w 205 -h 64] \
+    ]
+
+    set w [dlgFrmCreate "[strTableGet 1261_LICENSE] Detect"]
+
+    nextCallback
+}
+
+
+proc pageProcess(wlmdDetect) {} {
+    global setupVals ctrlVals
+
+    for {set i 0} {$i < 10} {incr i} {
+        uiEventProcess
+    }
+
+    beginWaitCursor
+    set setupVals(isWlmdRunning) [pingServer [info host]]
+    endWaitCursor
+
+    if {[needUpdateWlmd] && $setupVals(isWlmdRunning)} {
+        messageBox -ok -stopicon [strTableGet 1359_LICENSE_SERVER_SHUTDOWN]
+        applicationExit
+    } {
+        set ctrlVals(currPage) welcome
+        pageRemove wlmdDetect
+        return 1
+    }
+}
+
+
+proc needUpdateWlmd {} {
+    global ctrlVals setupVals
+
+    set retVal 0
+    set installedWlmd [systemDirGet]\\WLMD.EXE
+    set cdWlmd $setupVals(WLM_DIR)\\WLMD.EXE
+
+    if {[file exists $installedWlmd]} {
+        set retVal [expr [file mtime $installedWlmd] < [file mtime $cdWlmd]]
+    }
+    return $retVal
+}
+
+
+proc mailSend {} {
+    global ctrlVals
+
+    dialogCreate \
+        -name mailConfirmDlg \
+        -parent $ctrlVals(mainWindow) \
+        -title "Mail Confirmation" \
+        -width 181 -height 133 \
+        -init mailSendInit \
+        -controls { \
+                { button -title "Send" -name sendButt -default \
+                        -xpos 66 -ypos 112 -width 50 -height 14  \
+                        -callback onMailSend }
+                { button -title "Cancel" -name cancelButt  \
+                        -xpos 124 -ypos 112 -width 50 -height 14  \
+                        -callback {windowClose mailConfirmDlg} }
+                { label -title "Subject:" -name subjectLabel  \
+                        -xpos 7 -ypos 41 -width 33 -height 8 }
+                { text -name toEdit -readonly \
+                        -xpos 47 -ypos 6 -width 126 -height 12 }
+                { label -title "To:" -name toLabel  \
+                        -xpos 7 -ypos 8 -width 19 -height 8 }
+                { label -title "From:" -name fromLabel  \
+                        -xpos 7 -ypos 25 -width 18 -height 8 }
+                { text -name fromEdit  \
+                        -xpos 47 -ypos 23 -width 126 -height 12 }
+                { text -name subjectEdit  -readonly \
+                        -xpos 47 -ypos 39 -width 126 -height 12 }
+                { group -title "Mail Protocol" -name group1  \
+                        -xpos 7 -ypos 56 -width 166 -height 47 }
+                { choice -title "SMTP host:" -name smtpButt  \
+                        -newgroup -auto \
+                        -xpos 16 -ypos 74 -width 56 -height 10  \
+                        -callback onSmtp }
+                { choice -title "MAPI" -name mapiButt  \
+                        -auto \
+                        -xpos 16 -ypos 86 -width 33 -height 10  \
+                        -callback onMapi }
+                { text -name smtpEdit  \
+                        -xpos 72 -ypos 73 -width 90 -height 13 }
+        }
+    return 1
+}
+
+
+proc onMailSend {} {
+    global setupVals
+
+    set retVal 1
+    set attachments ""
+    set bccList ""
+    set msgContents "$setupVals(mailMsg)"
+    set server [controlValuesGet mailConfirmDlg.smtpEdit]
+    set toList [controlValuesGet mailConfirmDlg.toEdit]
+    set sender [controlValuesGet mailConfirmDlg.fromEdit]
+    set ccList $sender
+    set subject [controlValuesGet mailConfirmDlg.subjectEdit]
+    set mailDate [clock format [clock second] -format "%a, %d %h %Y %X"]
+
+    if {$sender == ""} {
+        messageBox [strTableGet 3356_LICENSE_WARN]
+        controlFocusSet mailConfirmDlg.fromEdit
+        return 0
+    }
+
+    if {$server == "" &&  [controlValuesGet mailConfirmDlg.smtpButt] == "1"} {
+       messageBox [strTableGet 1541_MAIL_SERVER]
+       set retVal 0
+    } {
+        beginWaitCursor
+
+        if {[controlValuesGet mailConfirmDlg.smtpButt] == "0"} {
+            set mailCommand {mapiMailSend $toList $ccList $bccList \
+                                $subject $msgContents $attachments}
+        } {
+            set mailCommand {smtpMailSend $mailDate $sender $toList $ccList \
+                            $bccList $subject $msgContents $server $attachments}
+            set msgContents [split $msgContents \n]
+        }
+
+        if [catch $mailCommand error] {
+            endWaitCursor
+            messageBox -stop [strTableGet 1240_MAIL_ERROR]
+        } {
+            endWaitCursor
+            messageBox -info  [strTableGet 1250_MAIL_OK]
+            windowClose mailConfirmDlg
+        }
+    }
+    return $retVal
+}
+
+
+proc generateIniFile {} {
+    global ctrlVals
+    global setupVals
+
+    set Inifile "[setupWinDirGet]\\WindLM.ini"
+
+    if {![file exists "$Inifile"] && ![catch {open "$Inifile" "w"} f]} {
+        puts $f "\[WindLM\]"
+        puts $f "Debugging=off"
+        puts $f "Verbosity=3"
+        puts $f "KeyDir=[licenseHomeDirGet]"
+        puts $f "StartTime=0"
+        puts $f "Zombie=180"
+        puts $f "ResourceFile="
+        puts $f "LogFile=[licenseHomeDirGet]\\windlm.log"
+        puts $f "LogFileSizeLimit=1m"
+        puts $f "Startup=automatic"
+        close $f
+        uninstLog file "window\t$Inifile"
+    }
+}
+
+
+proc licenseFilesCopy {} {
+    global ctrlVals
+    global setupVals
+
+    set wlmPath $setupVals(WLM_DIR)
+    set winBinDir "system"
+    if {$ctrlVals(NT)} {set winBinDir "system32"}
+
+    fileDupLog "$wlmPath\\WLMD.CPL" window "$winBinDir\\WLMD.CPL" update
+    fileDupLog "$wlmPath\\WLMD.EXE" window "$winBinDir\\WLMD.EXE" update
+
+    generateIniFile
+
+    set licenseFileList [list WLMADMIN.EXE]
+    set relDestDir "host\\[windHostTypeGet]\\bin"
+
+    foreach file $licenseFileList {
+        fileDupLog "$wlmPath\\$file" wind_base "$relDestDir\\$file" update
+    }
+}
+
+
+proc onLicChoice {opt} {
+    global setupVals
+
+    set setupVals(licAction) $opt
+}
+
+
+proc onRemoveLic {} {
+    global ctrlVals
+    global setupVals
+
+    set sel [controlSelectionGet $ctrlVals(mainWindow).licList -string]
+
+    set index [lsearch $setupVals(licenseKeyList) "$sel"]
+
+    if {$index != "-1"} {
+        set setupVals(licenseKeyList) [lreplace \
+                $setupVals(licenseKeyList) $index $index]
+
+        controlValuesSet $ctrlVals(mainWindow).licList \
+             $setupVals(licenseKeyList)
+
+        for {set i 1} {$i < 6} {incr i} {
+            controlValuesSet $ctrlVals(mainWindow).ctrl$i ""
+        }
+    } {
+        messageBox "Please select a license key first."
+        set retVal 0
+    }
+
+
+    controlSelectionSet $ctrlVals(mainWindow).licList 0
+}
+
+
+proc onAddLic {} {
+    global ctrlVals
+    global setupVals
+
+    set retVal 1
+    set selKey [controlValuesGet $ctrlVals(mainWindow).licenseKeyText]
+
+    if {[string trim $selKey] != "" && \
+        [lsearch $setupVals(licenseKeyList) "$selKey"] == "-1"} {
+
+        if [catch {decodeKey $selKey} error] {
+            set setupVals(licenseKey) $selKey
+            messageBox [strTableGet 1281_LICENSE_KEY_ERROR_2 \
+                                    $setupVals(licenseKey)]
+
+            set setupVals(licenseKey) ""
+            set retVal 0
+        } {
+            lappend setupVals(licenseKeyList) $selKey
+
+            controlValuesSet $ctrlVals(mainWindow).licList \
+                 $setupVals(licenseKeyList)
+
+            controlSelectionSet $ctrlVals(mainWindow).licList \
+                            [expr [llength $setupVals(licenseKeyList)] - 1]
+        }
+    } elseif {[string trim $selKey] == ""} {
+        messageBox "Please enter a license key first."
+        controlFocusSet $ctrlVals(mainWindow).licenseKeyText
+        set retVal 0
+    }
+
+    controlValuesSet $ctrlVals(mainWindow).licenseKeyText ""
+    return $retVal
+}
+
+
+proc keyInfoUpdate {} {
+    global ctrlVals
+    global setupVals
+
+    set retVal 1
+
+    if {[llength $setupVals(licenseKeyList)] != 0} {
+        set key [controlSelectionGet $ctrlVals(mainWindow).licList -string]
+        set pList [split [decodeKey $key] "\n"]
+        controlValuesSet $ctrlVals(mainWindow).ctrl1 [lindex $pList 0]
+        controlValuesSet $ctrlVals(mainWindow).ctrl2 \
+            [featureDescGet [lindex $pList 0]]
+        controlValuesSet $ctrlVals(mainWindow).ctrl3 [lindex $pList 2]
+        controlValuesSet $ctrlVals(mainWindow).ctrl4 \
+            [clock format [lindex $pList 3] -format "%b %d %Y"]
+        controlValuesSet $ctrlVals(mainWindow).ctrl5 \
+            [clock format [lindex $pList 4] -format "%b %d %Y"]
+    } {
+        set retVal 0
+    }
+}
+
+
+proc mailSendInit {} {
+    controlValuesSet mailConfirmDlg.toEdit [strTableGet 1220_MAIL_TO]
+    controlValuesSet mailConfirmDlg.subjectEdit [strTableGet 1230_MAIL_SUBJECT]
+    controlValuesSet mailConfirmDlg.smtpEdit "mailhost"
+    controlValuesSet mailConfirmDlg.smtpButt 1
+}
+
+
+proc onSmtp {} {
+    controlEnable mailConfirmDlg.smtpEdit 1
+}
+
+
+proc onMapi {} {
+    controlEnable mailConfirmDlg.smtpEdit 0
+}
+
+#
+# licenseHomeDirGet/Set() from GLOBAL.TCL
+#
+proc licenseHomeDirGet {} {
+    global setupVals
+
+    if [info exists setupVals(licenseHomeDir)] {
+        return $setupVals(licenseHomeDir)
+    } {
+        return ""
+    }
+}
+
+proc licenseHomeDirSet {val} {
+    global setupVals
+    set setupVals(licenseHomeDir) $val
+}
+
+#
+# license messages from MESSAGES.TCL
+# 
+set strTable(1261_LICENSE) "Wind License Manager"
+
+set strTable(1072_WARN_1) \
+    "Please enter a valid license server host name."
+
+set strTable(1205_FINISH) \
+    "SETUP detected that there was at least one installed product that will\
+     not work without the [strTableGet 1261_LICENSE] running.  You might\
+     need to run \'SETUP -L\' to setup the [strTableGet 1261_LICENSE].  For\
+     more information, consult the Wind River Product Installation Guide."
+
+set strTable(1220_MAIL_TO) "license@wrs.com"
+set strTable(1230_MAIL_SUBJECT) "License Key Request"
+set strTable(1240_MAIL_ERROR) "Cannot send mail.  Please contact WRS instead."
+set strTable(1541_MAIL_SERVER) "Please enter a valid server name."
+
+set strTable(1250_MAIL_OK) \
+    "Your request for the License Key has been sent to\
+     [strTableGet 1220_MAIL_TO].  Please allow us one business day for\
+     processing your request."
+
+set strTable(1260_LICENSE_KEY) \
+    "format %s \"SETUP will now configure the [strTableGet 1261_LICENSE]\
+                 on this machine, \[lindex \$args 0\], to recognize the new\
+                 license key(s).\""
+
+set strTable(1270_LICENSE_KEY_ERROR) \
+    "At least one license key needs to be added."
+
+set strTable(1280_LICENSE_KEY_ERROR_1) \
+    "format %s \"Cannot create license file: \[lindex \$args 0\]\""
+
+set strTable(1281_LICENSE_KEY_ERROR_2) \
+    "format %s \"The license key you entered, \[lindex \$args 0\], is not\
+                 valid.  Please enter a valid key.\""
+
+set strTable(1261_LICENSE_KEY_FINISH_OK) \
+    "format %s \"SETUP has finished installing the \[cdromDescGet\].  SETUP\
+                 has launched the \[cdromDescGet\] with a default\
+                 configuration.  You can reconfigure \[cdromDescGet\] later\
+                 from the control panel.\""
+
+set strTable(1262_LICENSE_KEY_FINISH_BAD) \
+    "format %s \"SETUP has finished installing \[cdromDescGet\].\
+                 \n\nYou must reboot this computer before using\
+                 \n\[cdromDescGet\].\""
+
+set strTable(3356_LICENSE_WARN) \
+    "You must enter the return email address"
+
+set strTable(1290_LICENSE_CHOICE) \
+    "The [strTableGet 1261_LICENSE] must be configured before you can use the\
+     following licensed product feature(s)."
+
+set strTable(1291_LICENSE_CHOICE) \
+    "Select the appropriate option listed below to continue."
+
+set strTable(1300_LICENSE_CHOICE_0) \
+    "Configure to use a floating [strTableGet 1261_LICENSE]"
+
+set strTable(3300_LICENSE_CHOICE_0) \
+    "1 - Configure to use a floating [strTableGet 1261_LICENSE]"
+
+set strTable(1300_LICENSE_CHOICE_1) \
+    "Have license key, go to the next step"
+
+set strTable(3300_LICENSE_CHOICE_1) \
+    "2 - Have license key, go to the next step"
+
+set strTable(1310_LICENSE_CHOICE_2) \
+    "Contact WRS via email to obtain the license key"
+
+set strTable(3310_LICENSE_CHOICE_2) \
+    "3 - Contact WRS via email to obtain the license key"
+
+set strTable(1320_LICENSE_CHOICE_3) \
+    "Contact WRS to obtain the license key"
+
+set strTable(3320_LICENSE_CHOICE_3) \
+    "4 - Contact WRS to obtain the license key"
+
+set strTable(3325_LICENSE_CHOICE_QUESTION) \
+    "Select 1, 2, 3, or 4. \[1\]"
+
+set strTable(3355_LICENSE_QUESTION) \
+    "Do you have another license key? \[n\]"
+
+set strTable(1330_LICENSE_MAIL) \
+    "The following message will be sent to [strTableGet 1220_MAIL_TO]."
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE1) "To Wind River Systems,"
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE2) \
+    "This is a request for a License Key:"
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE3) \
+    "format %s \"Customer Name\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE4) \
+    "format %s \"Company Name\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE5) \
+    "format %s \"Installation Key:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE5a) \
+    "format %s \"Installation Key\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE6) \
+    "format %s \"License Number\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE7) \
+    "format %s \"Host Name\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE8) \
+    "format %s \"Host Id\t\t:  \[lindex \$args 0\]\""
+
+set strTable(1340_LICENSE_MAIL_HEADER_LINE9) \
+    "Licensed product feature(s):"
+
+set strTable(3340_LICENSE_MAIL_QUESTION) \
+    "Press <Return> to send mail or type \"-\" to go to previous page."
+
+set strTable(1350_LICENSE_CALL) \
+    "To obtain a license key in North America, call 1-800-545-9463 \
+     with the information listed below.  For other countries, consult \
+     the Wind River Products Installation Guide for instructions."
+
+set strTable(1352_LICENSE_WARNING) \
+    "format %s \"You must have System Administrator privileges to install\
+                 \[cdromDescGet\] under Windows NT.\""
+
+set strTable(1353_LICENSE_REMOTE) \
+    "The floating [strTableGet 1261_LICENSE] is a daemon that keeps track of\
+     all available licenses floating on your network, and serves the license\
+     request from the client applications.\
+     \n\nEnter the name of the host on which the [strTableGet 1261_LICENSE]\
+     is running."
+
+set strTable(1354_LICENSE_REMOTE) \
+    "format %s \"SETUP has saved the floating license server host name.  From\
+                 now on, all the WRS licensed product(s) will first attempt to\
+                 contact the specified host to checkout its license.\""
+
+set strTable(1355_LICENSE_SUCCESS) \
+    "format %s \"SETUP completed successfully.  For information on starting up\
+                 the [strTableGet 1261_LICENSE], consult the Wind River Product\
+                 Installation Guide.\""
+
+set strTable(1356_LICENSE_FAIL) \
+    "format %s \"The license key, \[lindex \$args 0\], was not created for this\
+                 host, \[lindex \$args 1\].  Please remove it from the list,\
+                 then continue.\""
+
+set strTable(1357_LICENSE_REMOTE_FAIL) \
+    "format %s \"There is no [strTableGet 1261_LICENSE] running on\
+                 \[lindex \$args 0\].  Please select again.\""
+
+set strTable(1358_LICENSE_SERVER_DETECT) \
+    "Please wait, while SETUP is detecting if there is a\
+     [strTableGet 1261_LICENSE] running on this machine..."
+
+set strTable(1359_LICENSE_SERVER_SHUTDOWN) \
+    "SETUP detects that there is an out-dated version of\
+     [strTableGet 1261_LICENSE] running on this machine,  Please shut it down,\
+     and restart the SETUP program."
+
+set strTable(1510_TITLE_LICENSE_KEY) "License Key"
+set strTable(1520_TITLE_LICENSE_CHOICE) "License Options"
+set strTable(1530_TITLE_LICENSE_MAIL) "Email License"
+set strTable(1540_TITLE_LICENSE_CALL) "Contact WRS"
+set strTable(1561_TITLE_LICENSE_REMOTE) "Floating [strTableGet 1261_LICENSE]"
+
